@@ -8,6 +8,7 @@ import com.xzsd.pc.shuffl.dao.ShufflDao;
 import com.xzsd.pc.shuffl.entity.ShufflInfo;
 import com.xzsd.pc.util.AppResponse;
 import com.xzsd.pc.util.RedisOperator;
+import com.xzsd.pc.util.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,6 +17,9 @@ import javax.annotation.Resource;
 import java.util.Arrays;
 import java.util.List;
 
+/**
+ * 轮播图
+ */
 @Service
 public class ShufflService {
     @Autowired
@@ -31,12 +35,12 @@ public class ShufflService {
         if (0 != countShuffl) {
             return AppResponse.bizError("商品已存在，请重新输入！");
         }
+        //校验轮播图序号是否存在
         int countSort = shufflDao.countSort(shufflInfo);
         if(countSort != 0){
             return AppResponse.bizError("序号已存在，请重新输入！");
         }
-        // goodsInfo.setGoodsCode(StringUtil.getCommonCode(2));
-        // goodsInfo.setIsDeleted(0);
+         shufflInfo.setIsDeleted(0);
         // 新增轮播图商品
         int count = shufflDao.saveShuffl(shufflInfo);
         if (0 == count) {
@@ -44,6 +48,12 @@ public class ShufflService {
         }
         return AppResponse.success("新增成功！");
     }
+
+    /**
+     * 查询轮播图列表分页
+     * @param shufflInfo
+     * @return
+     */
     public AppResponse listShufll(ShufflInfo shufflInfo){
         PageHelper.startPage(shufflInfo.getPageNum(),shufflInfo.getPageSize());
         List<ShufflInfo> shufflInfos = shufflDao.listShuffl(shufflInfo);
@@ -87,18 +97,10 @@ public class ShufflService {
      * 查询商品列表（分页）
      */
     public AppResponse findShufflGoods(GoodsInfo goodsInfo){
-        /*if(redisOperator.get(goodsInfo.toString()) != null) {
-            System.out.println("从redis查");
-            PageInfo<GoodsInfo> pageData = JsonUtils.fromJson(redisOperator.get(goodsInfo.toString()),PageInfo.class);
-            return AppResponse.success("查询成功", pageData);
-        }*/
-
-         //   System.out.println("从数据库查询");
             PageHelper.startPage(goodsInfo.getPageNum(), goodsInfo.getPageSize());
-            List<GoodsInfo> goodsInfos =  goodsDao.listGoods(goodsInfo);
+            List<GoodsInfo> goodsInfos =  goodsDao.findShufflGoods(goodsInfo);
             //包装page对象
             PageInfo<GoodsInfo> pageData = new PageInfo<>(goodsInfos);
-           // redisOperator.set(goodsInfo.toString(),JsonUtils.toJson(pageData),300);
             return AppResponse.success("查询成功", pageData);
 
     }

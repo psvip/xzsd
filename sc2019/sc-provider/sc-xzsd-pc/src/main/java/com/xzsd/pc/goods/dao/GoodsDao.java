@@ -47,4 +47,8 @@ public interface GoodsDao {
     /**
      *
      */
+    /**
+     * 轮播图中查询商品分页
+     */
+    List<GoodsInfo> findShufflGoods(GoodsInfo goodsInfo);
 }

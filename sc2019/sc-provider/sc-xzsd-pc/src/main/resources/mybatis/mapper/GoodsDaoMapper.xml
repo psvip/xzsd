@@ -70,8 +70,8 @@
         a.goods_code goodsCode,
         a.goods_name goodsName,
         a.isbn_num isbn,
-        a.classificationl_one classficationlOneId,
-        a.classificationl_two classficationlTwoId,
+        b.cate_name classficationlOne,
+        c.cate_name classficationlTwo,
         a.fix_price fixPrice,
         a.cost_price costPrice,
         a.sell_price sellPrice,
@@ -84,7 +84,6 @@
         a.outside_name outsideName,
         a.goods_state state,
         a.shelve_time shelve,
-        a.isbn_num isbn,
         a.is_deleted,
         a.sort_no,
         a.gmt_create,
@@ -93,6 +92,10 @@
         a.last_modified_by,
         a.version
         from t_goods a
+        left join t_goods_classification b
+        on a.classificationl_one = b.cate_code
+        left join t_goods_classification c
+        on c.cate_code_parent = b.cate_code
         where a.is_deleted = 0
         <if test="goodsName != null and goodsName != ''">
             and a.goods_name like concat('%', #{goodsName}, '%')
@@ -109,6 +112,7 @@
         <if test="state != null and state != ''">
             and a.goods_state =#{state}
         </if>
+        group by a.goods_code
         order by gmt_create desc
     </select>
     <!--删除商品-->
@@ -196,4 +200,34 @@
             #{item}
         </foreach>
     </update>
+    <!--轮播图中查询商品分页-->
+    <select id="findShufflGoods" parameterType="com.xzsd.pc.goods.entity.GoodsInfo" resultType="com.xzsd.pc.goods.entity.GoodsInfo">
+        select
+        a.goods_code goodsCode,
+        a.goods_name goodsName,
+        b.cate_name classficationlOne,
+        c.cate_name classficationlTwo,
+        a.goods_state state,
+        a.is_deleted,
+        a.sort_no,
+        a.gmt_create,
+        a.create_by,
+        a.gmt_modified,
+        a.last_modified_by,
+        a.version
+        from t_goods a
+        left join t_goods_classification b
+        on a.classificationl_one = b.cate_code
+        left join t_goods_classification c
+        on c.cate_code_parent = b.cate_code
+        where a.is_deleted = 0
+        <if test="goodsName != null and goodsName != ''">
+            and a.goods_name like concat('%', #{goodsName}, '%')
+        </if>
+        <if test="goodsCode != null and goodsCode != ''">
+            and a.goods_code like concat('%', #{goodsCode}, '%')
+        </if>
+        group by a.goods_code
+        order by gmt_create desc
+    </select>
 </mapper>

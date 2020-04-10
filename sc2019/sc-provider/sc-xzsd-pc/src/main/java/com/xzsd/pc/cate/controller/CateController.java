@@ -13,6 +13,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
 
+/**
+ * 商品分类增删查改
+ */
 @RestController
 @RequestMapping("cate")
 public class CateController {
@@ -25,7 +28,7 @@ public class CateController {
     @PostMapping("saveCate")
     public AppResponse saveCate(CateInfo cateInfo) {
         try {
-            //获取商品id
+            //获取用户id
             String userId = AuthUtils.getCurrentUserId();
             cateInfo.setCreateBy(userId);
             AppResponse appResponse = cateService.saveCate(cateInfo);
