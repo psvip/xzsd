@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.xzsd.pc.cate.dao.CateDao">
+    <select id="countCateCode" parameterType="com.xzsd.pc.cate.entity.CateInfo" resultType="int">
+        select  count(cate_code)
+        from t_goods_classification
+        where is_deleted = 0
+        and cate_code = #{cateCode}
+        <if test="cateCode !=null and cateCode != '' ">
+            and cate_code != #{cateCode}
+        </if>
+    </select>
+    <!--新增商品分类-->
+    <insert id="saveCate" parameterType="com.xzsd.pc.cate.entity.CateInfo">
+        insert into t_goods_classification
+           (cate_name,
+            cate_note,
+            cate_code,
+            cate_code_parent,
+            level,
+            is_parent,
+            is_deleted,
+            sort_no,
+            gmt_create,
+            create_by,
+            gmt_modified,
+            last_modified_by,
+             version
+           )
+           values (
+           #{cateName},
+           #{cateNote},
+           #{cateCode},
+           #{cateCodeParent},
+           #{level},
+           #{isParent},
+           #{isDeleted},
+            0,
+            now(),
+            #{createBy},
+            now(),
+            #{lastModifiedBy},
+            0)
+    </insert>
+    <!-- 修改商品分类信息-->
+    <update id="updateCate" parameterType="com.xzsd.pc.cate.entity.CateInfo">
+        update  t_goods_classification
+        set
+            cate_name = #{cateName},
+            cate_note = #{cateNote},
+            cate_code_parent = #{cateCodeParent},
+            level = #{level},
+            is_parent =  #{isParent},
+            is_deleted = #{isDeleted},
+            gmt_modified = now(),
+            last_modified_by  = #{lastModifiedBy},
+            version = version + 1
+            where cate_code = #{cateCode}
+            and version = #{version}
+    </update>
+    <select id="listCate" parameterType="com.xzsd.pc.cate.entity.CateInfo" resultType="com.xzsd.pc.cate.entity.CateInfo">
+        select
+            a.cate_name cateName,
+            a.cate_code cateCode,
+            a.cate_note cateNode
+            from  t_goods_classification a
+            where a.level = 1
+            order by gmt_create desc
+    </select>
+    <select id="listCateTwo" parameterType="java.lang.String" resultType="com.xzsd.pc.cate.entity.CateInfo">
+        select
+            cate_name cateName,
+            cate_code cateCode
+            from  t_goods_classification
+            where  cate_code_parent = #{nextCode}
+
+    </select>
+    <select id="countZiclass" parameterType="java.lang.String" resultType="int">
+        select  count(cate_code_parent)
+        from t_goods_classification
+        where is_deleted = 0
+        and cate_code_parent = #{cateCode}
+    </select>
+    <!--删除商品分类-->
+    <update id="deleteCate" parameterType="com.xzsd.pc.cate.entity.CateInfo" >
+        update t_goods_classification
+        set
+        is_deleted = 1,
+        gmt_modified = now(),
+        last_modified_by  = #{userId},
+        version = version + 1
+        where cate_code = #{cateCode}
+    </update>
+    <!--查询商品分类详情-->
+    <select id="findCateById" parameterType="java.lang.String" resultType="com.xzsd.pc.cate.entity.CateInfo">
+        select
+        cate_name cateName,
+        cate_code cateCode,
+        cate_note cateNote
+        from  t_goods_classification
+        where cate_code = #{cateCode}
+    </select>
+    <!--查询商品一级分类-->
+    <select id="findGoodsClassOne"  resultType="com.xzsd.pc.cate.entity.CateInfo">
+        select
+            a.cate_name cateName,
+            a.cate_code cateCode,
+            a.cate_note cateNode
+            from  t_goods_classification a
+            where a.level = 1
+            order by gmt_create desc
+    </select>
+    <!--查询一级分类下二级分类-->
+    <select id="findGoodsClassTwo" parameterType="java.lang.String" resultType="com.xzsd.pc.cate.entity.CateInfo">
+        select
+            a.cate_name cateName,
+            a.cate_code cateCode,
+            a.cate_note cateNode
+            from  t_goods_classification a
+            where a.cate_code_parent = #{classificationlOneId}
+            order by gmt_create desc
+    </select>
+</mapper>

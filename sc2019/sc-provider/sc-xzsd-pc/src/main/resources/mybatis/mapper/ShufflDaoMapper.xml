@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.xzsd.pc.shuffl.dao.ShufflDao">
+    <select id="countShufflCode" parameterType="com.xzsd.pc.shuffl.entity.ShufflInfo" resultType="int">
+        select  count(goods_code)
+        from t_shuffling_figure
+        where is_deleted = 0
+        and goods_code = #{goodsCode}
+        <if test="goodsCode !=null and goodsCode != '' ">
+            and goods_code != #{goodsCode}
+        </if>
+    </select>
+    <select id="countSort" parameterType="com.xzsd.pc.shuffl.entity.ShufflInfo" resultType="int">
+        select  count(shuffl_sort)
+        from t_shuffling_figure
+        where  shuffl_sort = #{sort}
+        <if test="sort !=null and sort != '' ">
+            and shuffl_sort != #{sort}
+        </if>
+    </select>
+    <!-- 新增轮播图-->
+    <insert id="saveShuffl" parameterType="com.xzsd.pc.shuffl.entity.ShufflInfo">
+        insert into t_shuffling_figure
+        (   shuffl_sort,
+            photo,
+            shuffl_state,
+            time_begin,
+            time_end,
+            goods_code,
+            shuffl_id,
+            is_deleted,
+            sort_no,
+            gmt_create,
+            create_by,
+            gmt_modified,
+            last_modified_by,
+            version
+            )
+            values (
+            #{sort},
+            #{photo},
+            #{state},
+            #{timeBegin},
+            #{timeEnd},
+            #{goodsCode},
+            #{shufflId},
+            #{isDeleted},
+            0,
+            now(),
+            #{createBy},
+            now(),
+            #{lastModifiedBy},
+            0
+            )
+    </insert>
+    <!-- 查询轮播图列表-->
+    <select id="listShuffl" parameterType="com.xzsd.pc.shuffl.entity.ShufflInfo" resultType="com.xzsd.pc.shuffl.entity.ShufflInfo">
+        select
+            shuffl_sort sort,
+            photo photo,
+            shuffl_state state,
+            time_begin timeBegin,
+            time_end timeEnd,
+            shuffl_id shufflId,
+            goods_code goodsCode,
+            is_deleted isDeleted,
+            sort_no,
+            gmt_create,
+            create_by,
+            gmt_modified,
+            last_modified_by,
+            version
+            from t_shuffling_figure
+            where is_deleted = 0
+            <if test="state != null and state != ''">
+                and shuffl_state =#{state}
+            </if>
+            order by gmt_create desc
+    </select>
+    <!--删除轮播图-->
+    <update id="deleteShuffl" parameterType="com.xzsd.pc.shuffl.entity.ShufflInfo">
+        update t_shuffling_figure
+        set
+        is_deleted = 1,
+        gmt_modified = now(),
+        last_modified_by  = #{userId},
+        version = version + 1
+        where shuffl_id in
+        <foreach item="item" index="index" collection="shufflList" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </update>
+    <!-- 修改轮播图状态-->
+    <update id="updateShufflState" parameterType="com.xzsd.pc.shuffl.entity.ShufflInfo">
+        update t_shuffling_figure
+        set
+            shuffl_state =#{state},
+            gmt_modified = now(),
+            last_modified_by  = #{userId},
+            version = version + 1
+          where is_deleted = 0
+          and shuffl_id in
+        <foreach item="item" index="index" collection="shufflList" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </update>
+</mapper>

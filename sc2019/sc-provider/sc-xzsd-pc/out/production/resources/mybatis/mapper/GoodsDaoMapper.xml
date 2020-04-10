@@ -1,0 +1,197 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.xzsd.pc.goods.dao.GoodsDao">
+    <select id="countGoodsCode" parameterType="com.xzsd.pc.goods.entity.GoodsInfo" resultType="int">
+        select  count(goods_code)
+        from t_goods
+        where is_deleted = 0
+        and goods_code = #{goodsCode}
+        <if test="goodsCode !=null and goodsCode != '' ">
+            and goods_code != #{goodsCode}
+        </if>
+    </select>
+    <insert id="saveGoods" parameterType="com.xzsd.pc.goods.entity.GoodsInfo">
+        insert into t_goods
+        (goods_code,
+         goods_name,
+         isbn_num,
+         classificationl_one,
+         classificationl_two,
+         fix_price,
+         cost_price,
+         sell_price,
+         sale_cnt,
+         introduce,
+         press,
+         author,
+         detail,
+         inventory,
+         outside_name,
+         goods_state,
+         shelve_time,
+         photo,
+         is_deleted,
+         sort_no,
+         gmt_create,
+         create_by,
+         gmt_modified,
+         last_modified_by,
+         version
+         )
+        values
+           (#{goodsCode},
+            #{goodsName},
+            #{isbn},
+            #{classficationlOneId},
+            #{classficationlTwoId},
+            #{fixPrice},
+            #{costPrice},
+            #{sellPrice},
+            #{saleCnt},
+            #{goodsIntroduce},
+            #{goodsPress},
+            #{goodsAuthor},
+            #{goodsDetail},
+            #{inventory},
+            #{outsideName},
+            #{state},
+            #{shelve},
+            #{goodsPhoto},
+            #{isDeleted},
+            0,
+            now(),
+            #{createBy},
+            now(),
+            #{lastModifiedBy},
+            0)
+    </insert>
+    <!--商品列表-->
+    <select id="listGoods" parameterType="com.xzsd.pc.goods.entity.GoodsInfo" resultType="com.xzsd.pc.goods.entity.GoodsInfo">
+        select
+        a.goods_code goodsCode,
+        a.goods_name goodsName,
+        a.isbn_num isbn,
+        a.classificationl_one classficationlOneId,
+        a.classificationl_two classficationlTwoId,
+        a.fix_price fixPrice,
+        a.cost_price costPrice,
+        a.sell_price sellPrice,
+        a.sale_cnt saleCnt,
+        a.introduce goodsIntroduce,
+        a.press goodsPress,
+        a.author goodsAuthor,
+        a.detail goodsDetail,
+        a.inventory,
+        a.outside_name outsideName,
+        a.goods_state state,
+        a.shelve_time shelve,
+        a.isbn_num isbn,
+        a.is_deleted,
+        a.sort_no,
+        a.gmt_create,
+        a.create_by,
+        a.gmt_modified,
+        a.last_modified_by,
+        a.version
+        from t_goods a
+        where a.is_deleted = 0
+        <if test="goodsName != null and goodsName != ''">
+            and a.goods_name like concat('%', #{goodsName}, '%')
+        </if>
+        <if test="goodsIntroduce != null and goodsIntroduce != ''">
+            and a.introduce like concat('%', #{goodsIntroduce}, '%')
+        </if>
+        <if test="goodsAuthor != null and goodsAuthor != ''">
+            and a.author like concat('%',#{goodsAuthor},'%')
+        </if>
+        <if test="goodsPress != null and goodsPress != ''">
+            and a.press like concat ('%',#{goodsPress},'%')
+        </if>
+        <if test="state != null and state != ''">
+            and a.goods_state =#{state}
+        </if>
+        order by gmt_create desc
+    </select>
+    <!--删除商品-->
+    <update id="deleteGoods" parameterType="com.xzsd.pc.goods.entity.GoodsInfo">
+        update t_goods
+        set
+        is_deleted = 1,
+        gmt_modified = now(),
+        last_modified_by  = #{userId},
+        version = version + 1
+        where goods_code in
+        <foreach item="item" index="index" collection="listGoodsCode" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </update>
+    <!--修改商品信息-->
+    <update id="updateGoods" parameterType="com.xzsd.pc.goods.entity.GoodsInfo">
+        update t_goods
+        set
+            goods_name = #{goodsName},
+            isbn_num =	#{isbn},
+            classificationl_one = #{classficationlOneId},
+            classificationl_two = #{classficationlTwoId},
+            fix_price =	#{fixPrice},
+            cost_price = #{costPrice},
+            sell_price = #{sellPrice},
+            sale_cnt =	#{saleCnt},
+            introduce =	#{goodsIntroduce},
+            press = #{goodsPress},
+            author = #{goodsAuthor},
+            detail = #{goodsDetail},
+            inventory =	#{inventory},
+            outside_name = #{outsideName},
+            goods_state =#{state},
+            shelve_time = #{shelve},
+            photo =	#{goodsPhoto},
+            gmt_modified = now(),
+            last_modified_by  = #{lastModifiedBy},
+            version = version + 1
+        where goods_code = #{goodsCode}
+          and version = #{version}
+    </update>
+
+    <select id="findGoodsById" parameterType="java.lang.String" resultType="com.xzsd.pc.goods.entity.GoodsInfo">
+            select
+                a.goods_code goodsCode,
+                a.goods_name goodsName,
+                a.isbn_num isbn,
+                b.cate_name classficationlOne,
+                c.cate_name classficationlTwo,
+                fix_price fixPrice,
+                cost_price costPrice,
+                sell_price sellPrice,
+                sale_cnt saleCnt,
+                introduce goodsIntroduce,
+                press goodsPress,
+                author goodsAuthor,
+                detail goodsDetail,
+                inventory,
+                outside_name outsideName,
+                goods_state state,
+                shelve_time shelve,
+                photo goodsPhoto,
+                a.sort_no,
+                a.version
+            from t_goods a left join t_goods_classification b
+            on a.classificationl_one = b.cate_code left join
+            t_goods_classification c on c.cate_code_parent = b.cate_code
+            where a.goods_code = #{goodsCode}
+            and a.is_deleted = 0
+            and a.classificationl_two=c.cate_code
+    </select>
+    <update id="updateGoodsState" parameterType="com.xzsd.pc.goods.entity.GoodsInfo">
+        update t_goods
+        set
+            goods_state = #{state},
+            gmt_modified = now(),
+            last_modified_by  = #{userId},
+            version = version + 1
+        where goods_code in
+        <foreach item="item" index="index" collection="listGoodsCode" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </update>
+</mapper>
