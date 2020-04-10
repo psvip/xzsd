@@ -15,6 +15,9 @@ import javax.annotation.Resource;
 import java.util.Arrays;
 import java.util.List;
 
+/**
+ * 商品
+ */
 @Service
 public class GoodsService {
     @Autowired
@@ -40,19 +43,11 @@ public class GoodsService {
         if(0 != countGoods) {
             return AppResponse.bizError("商品已存在，请重新输入！");
         }
-       // goodsInfo.setGoodsCode(StringUtil.getCommonCode(2));
-       // goodsInfo.setIsDeleted(0);
-        // 新增用户
+        // 新增商品
         int count = goodsDao.saveGoods(goodsInfo);
         if(0 == count) {
             return AppResponse.bizError("新增失败，请重试！");
         }
-       /* try{
-            jmsMessagingTemplate.convertAndSend(queue,goodsInfo);
-            System.out.println("消息发送成功");
-        }catch (Exception e){
-            e.printStackTrace();
-        }*/
         return AppResponse.success("新增成功！");
     }
     /**

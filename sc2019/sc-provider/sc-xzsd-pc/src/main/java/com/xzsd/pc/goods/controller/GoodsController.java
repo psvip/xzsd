@@ -30,7 +30,7 @@ public class GoodsController {
     @PostMapping("saveGoods")
     public AppResponse saveGoods(GoodsInfo goodsInfo) {
         try {
-            //获取商品id
+            //获取用户id
             String userId = AuthUtils.getCurrentUserId();
             goodsInfo.setCreateBy(userId);
             AppResponse appResponse = goodsService.saveGoods(goodsInfo);
@@ -104,7 +104,6 @@ public class GoodsController {
     public AppResponse updateGoodsState(String goodsCode, String state){
         try {
             String userId = AuthUtils.getCurrentUserId();
-            System.out.println(state+"1");
             return goodsService.updateGoodsState(state,userId,goodsCode);
         }catch (Exception e){
             logger.error("修改商品信息错误",e);

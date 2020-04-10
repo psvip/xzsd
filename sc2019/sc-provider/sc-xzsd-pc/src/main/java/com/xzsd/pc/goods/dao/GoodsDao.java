@@ -6,6 +6,9 @@ import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
+/**
+ * 商品类
+ */
 public interface GoodsDao {
     /**
      * 统计商品
