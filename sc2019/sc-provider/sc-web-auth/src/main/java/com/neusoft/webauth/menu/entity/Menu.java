@@ -18,6 +18,7 @@ public class Menu {
     private String menuName;
 
     private String menuUrl;
+    private String menuNote;
 
     private String parentMenuCode;
 
@@ -45,11 +46,28 @@ public class Menu {
 
     private Date gmtCreate;
     private Date gmtModified;
+    private String role;
+
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
+    }
 
     /**
      * 版本
      */
     private String version;
+
+    public String getMenuNote() {
+        return menuNote;
+    }
+
+    public void setMenuNote(String menuNote) {
+        this.menuNote = menuNote;
+    }
 
     public String getId() {
         return id;

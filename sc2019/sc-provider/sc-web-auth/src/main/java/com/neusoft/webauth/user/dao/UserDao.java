@@ -61,4 +61,8 @@ public interface UserDao {
      * @return
      */
     int countUserAcct(UserInfo userInfo);
+    /**
+     * 获取该用户角色
+     */
+    int getRole(@Param("userId") String userId);
 }

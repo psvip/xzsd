@@ -1,6 +1,7 @@
 package com.neusoft.webauth.menu.dao;
 
 import com.neusoft.webauth.menu.entity.Menu;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -17,57 +18,28 @@ public interface MenuDao {
      * @return 菜单集合
      */
     List<Menu> listMenus();
-
-    /**
-     * 删除角色关联菜单
-     * @param menu 菜单信息
-     * @return
-     */
-    int deleteRoleMenu(Menu menu);
-
-//    void deleteAdditionMenu(String[] menuId);
-
     /**
      * 删除菜单
-     * @param menu 菜单信息
      * @return
      */
-    int deleteMenu(Menu menu);
-
-    int isExitChildMenu(Menu menu);
-
-    int updateParentType(Menu menu);
-
-    String getMaxChildrenSORT_NO(String parentMenuCode);
-
-    /**
-     * 获取菜单范围代码
-     * @param menu 菜单信息
-     * @return
-     */
-    String getAuthCode(Menu menu);
-
+    int deleteMenu(@Param("menuCode") String menuCode,@Param("userId")String userId);
     /**
      * 新增菜单
      * @param menu 菜单信息
      * @return
      */
-    int insertMenu(Menu menu);
-
+    int saveMenu(Menu menu);
     /**
      * 修改菜单
      * @param menu 菜单信息
      * @return
      */
     int updateMenu(Menu menu);
-
     /**
-     * 根据角色代码查询已授权的菜单代码
-     * @param roleCode 角色代码
-     * @return 菜单代码集合
+     * 查询店长能看到的菜单列表
+     *  @return 菜单代码集合
      */
-    List<Menu> listRoleMenusBy(String roleCode);
-
+    List<Menu> listMenusByMan();
     /**
      * 获取用户菜单信息
      * @param menu
@@ -81,4 +53,8 @@ public interface MenuDao {
      * @return
      */
     int deleteRoleMenuBtnByMenu(Menu menu);
+    /**
+     * 查询菜单详情
+     */
+    Menu findMenuById(@Param("menuCode")String menuCode);
 }
