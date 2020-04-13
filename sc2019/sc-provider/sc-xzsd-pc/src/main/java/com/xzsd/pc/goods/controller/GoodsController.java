@@ -76,7 +76,6 @@ public class GoodsController {
     public AppResponse updateGoods(GoodsInfo goodsInfo) {
         try {
             String userId = AuthUtils.getCurrentUserId();
-            goodsInfo.setCreateBy(userId);
             goodsInfo.setLastModifiedBy(userId);
             return goodsService.updateGoods(goodsInfo);
         }catch (Exception e){

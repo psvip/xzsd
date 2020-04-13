@@ -39,7 +39,6 @@ public class ShufflController {
             String userId = AuthUtils.getCurrentUserId();
             shufflInfo.setCreateBy(userId);
             AppResponse appResponse = shufflService.saveShuffl(shufflInfo);
-
             return appResponse;
         } catch (Exception e) {
             logger.error("商品新增失败", e);

@@ -90,11 +90,11 @@ public class GoodsService {
     @Transactional(rollbackFor =  Exception.class)
     public AppResponse updateGoods(GoodsInfo goodsInfo){
         AppResponse appResponse = AppResponse.success("修改成功");
-        int countgoodscode = goodsDao.countGoodsCode(goodsInfo);
+       /* int countgoodscode = goodsDao.countGoodsCode(goodsInfo);
         if( 0 != countgoodscode){
             return AppResponse.bizError("商品已存在，请重新输入");
 
-        }
+        }*/
         int count=goodsDao.updateGoods(goodsInfo);
         if(count == 0){
             appResponse = AppResponse.success("数据有变化，请刷新");
@@ -108,7 +108,6 @@ public class GoodsService {
     public AppResponse findGoodsById(String goodsCode){
         GoodsInfo goodsInfo = goodsDao.findGoodsById(goodsCode);
         return AppResponse.success("查询成功",goodsInfo);
-
     }
     /**
      * 修改商品状态
@@ -117,7 +116,6 @@ public class GoodsService {
     public AppResponse updateGoodsState(String state, String userId, String goodsCode){
         List<String>listGoodsCode = Arrays.asList(goodsCode.split(","));
         AppResponse appResponse = AppResponse.success("修改成功",state);
-        System.out.println(state+"2");
         int count=goodsDao.updateGoodsState(state,userId,listGoodsCode);
         if(count == 0){
             appResponse = AppResponse.success("数据有变化，请刷新");

@@ -1,15 +1,21 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.xzsd.pc.hot.dao.HotDao">
+    <!--查询热门位商品是否已存在-->
     <select id="countHotCode" parameterType="com.xzsd.pc.hot.entity.HotInfo" resultType="int">
-        select  count(hot_id)
+        select  count(goods_code)
         from t_hot_place
         where is_deleted = 0
-        and hot_id = #{hotId}
-        <if test="hotId !=null and hotId != '' ">
-            and hot_id != #{hotId}
-        </if>
+        and goods_code = #{goodsCode}
     </select>
+    <!--查询热门位商品序号是否已存在-->
+    <select id="countSort" parameterType="com.xzsd.pc.hot.entity.HotInfo" resultType="int">
+        select  count(hot_sort)
+        from t_hot_place
+        where is_deleted = 0
+        and hot_sort = #{hotSort}
+    </select>
+    <!--新增热门位商品-->
     <insert id="saveHot" parameterType="com.xzsd.pc.hot.entity.HotInfo">
         insert into t_hot_place
         (
@@ -76,6 +82,8 @@
         <if test="goodsCode != null and goodsCode != ''">
             and a.goods_code =#{goodsCode}
         </if>
+        group by a.hot_id
+        order by a.gmt_create desc
     </select>
     <!--删除热门位商品-->
     <update id="deleteHotGoods" parameterType="com.xzsd.pc.hot.entity.HotInfo">
@@ -90,5 +98,15 @@
             #{item}
         </foreach>
     </update>
-
+    <!--修改热门位商品数量-->
+    <update id="updateHotGoodsShow" parameterType="java.lang.String">
+        update
+        t_dictionary
+        set
+        dict_value = #{hotGoodsCnt},
+         gmt_modified = now(),
+         last_modified_by = #{userId},
+        version = version +1
+        where dict_name = 1
+    </update>
 </mapper>

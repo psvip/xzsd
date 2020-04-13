@@ -67,6 +67,31 @@ public class HotInfo {
      *商品售价
      */
     private String sellPrice;
+    /**
+     * 商品介绍
+     */
+    private String goodsIntroduce;
+    /**
+     * 页数
+     */
+    private int pageNum;
+    /**
+     * 版本号
+     */
+    private  String version;
+
+    /**
+     * 热门位商品数量
+     */
+    private String hotGoodsCnt;
+
+    public String getHotGoodsCnt() {
+        return hotGoodsCnt;
+    }
+
+    public void setHotGoodsCnt(String hotGoodsCnt) {
+        this.hotGoodsCnt = hotGoodsCnt;
+    }
 
     public String getGoodsName() {
         return goodsName;
@@ -92,10 +117,6 @@ public class HotInfo {
         this.goodsIntroduce = goodsIntroduce;
     }
 
-    /**
-     * 商品介绍
-     */
-    private String goodsIntroduce;
     public int getPageNum() {
         return pageNum;
     }
@@ -103,17 +124,6 @@ public class HotInfo {
     public void setPageNum(int pageNum) {
         this.pageNum = pageNum;
     }
-
-    /**
-     * 页数
-     */
-    private int pageNum;
-
-
-    /**
-     * 版本号
-     */
-    private  String version;
 
     public String getVersion() {
         return version;

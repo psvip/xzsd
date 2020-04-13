@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xzsd.pc.driver.dao.DriverDao">
+    <!--查询账号是否存在-->
+    <select id="countUserAcct" parameterType="com.xzsd.pc.driver.entity.DriverInfo" resultType="int">
+        select count(b.user_acct)
+        from t_driver a
+        left join t_sys_user b
+        on a.driver_code = b.user_code
+        where b.is_deleted = 0
+        and b.user_acct = #{userAcct}
+    </select>
+    <!--新增司机-->
+    <insert id="saveDriver" parameterType="com.xzsd.pc.driver.entity.DriverInfo" >
+        insert into
+        t_driver
+        (driver_code,
+        province_code,
+        city_code,
+        area_code
+        )
+        values
+        (
+        #{userCode},
+        #{provinceCode},
+        #{cityCode},
+        #{areaCode}
+        )
+    </insert>
+    <!--查询司机详情-->
+    <select id="findDriverById" parameterType="java.lang.String" resultType="com.xzsd.pc.driver.entity.DriverInfo">
+        select
+        a.driver_code,
+        b.user_name,
+        b.user_acct,
+        user_pwd,
+        id_card,
+        phone,
+        a.province_code,
+        a.city_code,
+        a.area_code,
+        b.version
+        from t_driver a
+        left join t_sys_user b
+        on a.driver_code = b.user_code
+        where b.is_deleted = 0
+        and a.driver_code = #{userCode}
+    </select>
+    <!--修改司机信息-->
+    <update id="updateDriverById" parameterType="com.xzsd.pc.driver.entity.DriverInfo">
+        update t_driver a
+        left join t_sys_user b
+        on a.driver_code = b.user_code
+        set
+        a.province_code = #{provinceCode},
+        a.city_code = #{cityCode},
+        a.area_code = #{areaCode},
+        b.user_name = #{userName},
+         b.user_acct = #{userAcct},
+         b.user_pwd = #{password},
+         b.id_card = #{idCard},
+         b.phone = #{phone},
+         b.gmt_modified = now(),
+         b.version = version + 1
+        where
+        a.driver_code = #{userCode}
+        and b.version = #{version}
+    </update>
+    <!--查询司机列表 管理员-->
+    <select id="listDriver" parameterType="com.xzsd.pc.driver.entity.DriverInfo" resultType="com.xzsd.pc.driver.entity.DriverInfo">
+        select
+        a.driver_code userCode,
+        b.user_name userName,
+        b.phone phone,
+        b.id_card idCard,
+        b.user_acct userAcct
+        from t_driver a
+        left join t_sys_user b
+        on a.driver_code = b.user_code
+        where b.is_deleted = 0
+        <if test="userName !=null and userName !=''">
+            and b.user_name like concat('%', #{userName}, '%')
+        </if>
+        <if test="userCode !=null and userCode !=''">
+            and a.driver_code like concat('%', #{userCode}, '%')
+        </if>
+        order by b.gmt_create desc
+    </select>
+    <!--查询司机信息（店长）-->
+    <select id="listDriverByMan" parameterType="com.xzsd.pc.driver.entity.DriverInfo" resultType="com.xzsd.pc.driver.entity.DriverInfo">
+        select
+        a.driver_code userCode,
+        b.user_name userName,
+        b.phone phone,
+        b.id_card idCard,
+        b.user_acct userAcct
+        from t_driver a
+        left join t_sys_user b
+        on a.driver_code = b.user_code
+        left join t_store c
+        on a.area_code =c.area_code
+        where b.is_deleted = 0
+        and c.manage_code = #{userId}
+        <if test="userName !=null and userName !=''">
+            and b.user_name like concat('%', #{userName}, '%')
+        </if>
+        <if test="userCode !=null and userCode !=''">
+            and a.driver_code like concat('%', #{userCode}, '%')
+        </if>
+        order by b.gmt_create desc
+    </select>
+    <!--删除司机-->
+    <update id="deleteDriver" parameterType="com.xzsd.pc.driver.entity.DriverInfo">
+        update t_sys_user
+        set
+        is_deleted = 1,
+        gmt_modified = now(),
+        last_modified_by  = #{userId},
+        version = version + 1
+        where user_code in
+        <foreach item="item" index="index" collection="listDriverCode" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </update>
+</mapper>

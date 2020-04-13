@@ -13,6 +13,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
 
+/**
+ * 热门位商品增删查改
+ */
 @RestController
 @RequestMapping("hot")
 public class HotController {
@@ -30,7 +33,6 @@ public class HotController {
             String userId = AuthUtils.getCurrentUserId();
             hotInfo.setCreateBy(userId);
             AppResponse appResponse = hotService.saveHot(hotInfo);
-
             return appResponse;
         } catch (Exception e) {
             logger.error("热门位商品新增失败", e);
@@ -57,7 +59,6 @@ public class HotController {
     public AppResponse updateHotGoodsById(HotInfo hotInfo){
         try {
             String userId = AuthUtils.getCurrentUserId();
-            hotInfo.setCreateBy(userId);
             hotInfo.setLastModifiedBy(userId);
             return hotService.updateHotGoodsById(hotInfo);
         }catch (Exception e){
@@ -79,6 +80,12 @@ public class HotController {
             throw e;
         }
     }
+
+    /**
+     * 删除热门位商品
+     * @param hotId
+     * @return
+     */
     @RequestMapping("deleteHotGoods")
     public AppResponse deleteHotGoods(String hotId){
         try{
@@ -90,4 +97,19 @@ public class HotController {
             throw e;
         }
     }
+    /**
+     * 热门位商品数量修改
+     */
+    @PostMapping("updateHotGoodsShow")
+    public AppResponse updateHotGoodsShow(String hotGoodsCnt){
+        try {
+            String userId = AuthUtils.getCurrentUserId();
+            return hotService.updateHotGoodsShow(hotGoodsCnt,userId);
+        }catch (Exception e){
+            logger.error("修改热门位商品数量信息错误",e);
+            System.out.println(e.toString());
+            throw  e;
+        }
+    }
+
 }

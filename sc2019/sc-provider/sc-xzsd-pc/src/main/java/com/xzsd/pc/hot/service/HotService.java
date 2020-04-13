@@ -28,7 +28,10 @@ public class HotService {
         if (0 != countHot) {
             return AppResponse.bizError("热门位商品已存在，请重新输入！");
         }
-
+        int countSort = hotDao.countSort(hotInfo);
+        if(0 != countSort){
+            return AppResponse.bizError("热门位序号已存在,请重新输入");
+        }
         // 新增热门位商品
         int count = hotDao.saveHot(hotInfo);
         if (0 == count) {
@@ -46,6 +49,12 @@ public class HotService {
        HotInfo hotInfo = hotDao.findHotGoodsById(hotId);
         return AppResponse.success("查询成功",hotInfo);
     }
+
+    /**
+     * 修改热门位商品信息
+     * @param hotInfo
+     * @return
+     */
     @Transactional(rollbackFor = Exception.class)
     public AppResponse updateHotGoodsById(HotInfo hotInfo){
         AppResponse appResponse = AppResponse.success("修改成功");
@@ -70,6 +79,13 @@ public class HotService {
         PageInfo<HotInfo> pageData = new PageInfo<>(hotInfos);
         return AppResponse.success("查询成功",pageData);
     }
+
+    /**
+     * 删除热门位商品
+     * @param hotId
+     * @param userId
+     * @return
+     */
     @Transactional(rollbackFor = Exception.class)
     public AppResponse deleteHotGoods(String hotId, String userId){
         List<String>listHotId = Arrays.asList(hotId.split(","));
@@ -79,5 +95,19 @@ public class HotService {
             appResponse = AppResponse.bizError("删除失败,请重试");
         }
         return appResponse;
+    }
+
+    /**
+     * 修改热门位商品数量
+     * @param
+     * @return
+     */
+    @Transactional (rollbackFor = Exception.class)
+    public AppResponse updateHotGoodsShow(String hotGoodsCnt,String userId){
+        int count = hotDao.updateHotGoodsShow(hotGoodsCnt,userId);
+        if(count == 0){
+             return AppResponse.bizError("数据有变化，请刷新");
+        }
+        return AppResponse.success("修改成功");
     }
 }

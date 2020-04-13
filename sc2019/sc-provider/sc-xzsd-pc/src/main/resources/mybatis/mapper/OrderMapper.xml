@@ -1,5 +1,77 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.xzsd.pc.order.dao.OrderDao">
-
+    <!--查看订单列表（管理员）-->
+        <select id="listOrderAll" parameterType="com.xzsd.pc.order.entity.OrderInfo" resultType="com.xzsd.pc.order.entity.OrderInfo">
+            select
+            order_id orderId,
+            order_price orderPrice,
+            order_state orderState,
+            pay_state payState,
+            store_code StoreId,
+            user_code userCode,
+            pay_name   userName,
+            pay_phone phone,
+            pay_time payTime
+            from t_order
+            where is_deleted = 0
+            <if test="userName != null and userName !=''">
+            and user_name like concat('%', #{userName}, '%')
+            </if>
+            <if test="phone !=null and phone !=''">
+            and pay_phone = #{phone}
+            </if>
+            <if test="orderId !=null and orderId !=''">
+                and order_id like concat('%', #{orderId}, '%')
+            </if>
+            <if test="orderState !=null and orderState !=''">
+                and order_state = #{orderState}
+            </if>
+            order by gmt_create desc
+        </select>
+    <!--查看订单列表（店长）-->
+    <select id="listOrder" parameterType="com.xzsd.pc.order.entity.OrderInfo" resultType="com.xzsd.pc.order.entity.OrderInfo">
+        select
+        a.order_id orderId,
+        a.order_price orderPrice,
+        a.order_state orderState,
+        a.pay_state payState,
+        a.store_code StoreId,
+        a.user_code userCode,
+        a.pay_name   userName,
+        a.pay_phone phone,
+        a.pay_time payTime
+        from t_order a left join t_customer b
+        on a.user_code = b.customer_code
+        left join t_store c
+        on b.invite_code = c.invite_code
+        where a.is_deleted = 0
+        and c.manage_code = #{userId}
+        <if test="userName != null and userName !=''">
+            and a.user_name like concat('%', #{userName}, '%')
+        </if>
+        <if test="phone !=null and phone !=''">
+            and a.pay_phone = #{phone}
+        </if>
+        <if test="orderId !=null and orderId !=''">
+            and a.order_id like concat('%', #{orderId}, '%')
+        </if>
+        <if test="orderState !=null and orderState !=''">
+            and a.order_state = #{orderState}
+        </if>
+        order by gmt_create desc
+    </select>
+    <!--修改订单状态-->
+    <update id="updateOrderState" parameterType="com.xzsd.pc.order.entity.OrderInfo">
+        update t_order
+        set
+        order_state = #{orderState},
+        gmt_modified = now(),
+        last_modified_by  = #{userId},
+        version = version + 1
+        and order_id in
+        <foreach item="item" index="index" collection="listOrderId" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </update>
 </mapper>

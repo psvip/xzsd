@@ -1,12 +1,15 @@
 package com.xzsd.pc.order.entity;
 
+import com.xzsd.pc.goods.entity.GoodsInfo;
+
 import java.util.Date;
+import java.util.List;
 
 public class OrderInfo {
     /**
      * 下单人
      */
-    private String username;
+    private String userName;
     /**
      *手机号
      */
@@ -68,12 +71,25 @@ public class OrderInfo {
      */
     private Date gmtModified;
 
-    public String getUsername() {
-        return username;
+    /**
+     * 店长id
+     */
+    private String userId;
+
+    public String getUserId() {
+        return userId;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
+    public void setUserId(String userId) {
+        this.userId = userId;
+    }
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
     }
 
     public String getPhone() {

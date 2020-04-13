@@ -2,6 +2,7 @@ package com.xzsd.pc.cate.dao;
 
 
 import com.xzsd.pc.cate.entity.CateInfo;
+import com.xzsd.pc.cate.entity.CateOne;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
@@ -23,13 +24,10 @@ public interface CateDao {
      */
     int saveCate(CateInfo cateInfo);
     /**
-     * 查询商品一级分类
+     * 查询商品分类列表
      */
-    List<CateInfo>listCate();
-    /**
-     * 查询商品二级分类
-     */
-    List<CateInfo> listCateTwo(String nextCode);
+    List<CateOne>listCate();
+
     /**
      * 删除商品分类
      */
@@ -50,6 +48,8 @@ public interface CateDao {
      * 查询商品一级分类
      */
     List<CateInfo> findGoodsClassOne();
-
+    /**
+     * 查询商品一级分类下二级分类
+     */
     List<CateInfo>findGoodsClassTwo(@Param("classificationlOneId") String classificationlOneId);
 }

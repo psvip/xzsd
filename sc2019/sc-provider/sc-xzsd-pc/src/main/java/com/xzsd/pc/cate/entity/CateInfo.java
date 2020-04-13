@@ -49,19 +49,6 @@ public class CateInfo {
      * 创建者
      */
     private String createBy;
-    /**
-     * 下一级分类
-     */
-    private List<CateInfo> nextCateVos = new ArrayList<>();
-
-    public List<CateInfo> getNextCateVos() {
-        return nextCateVos;
-    }
-
-    public void setNextCateVos(List<CateInfo> nextCateVos) {
-        this.nextCateVos = nextCateVos;
-    }
-
     public String getCateName() {
         return cateName;
     }

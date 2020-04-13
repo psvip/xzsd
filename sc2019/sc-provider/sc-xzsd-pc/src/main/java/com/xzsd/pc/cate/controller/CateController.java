@@ -40,7 +40,7 @@ public class CateController {
         }
     }
    /**
-     * 查询商品分类
+     * 查询商品分类列表
      */
     @RequestMapping(value = "listCate")
     public AppResponse listCate (){
@@ -74,7 +74,6 @@ public class CateController {
     public AppResponse updateCate(CateInfo cateInfo) {
         try {
             String userId = AuthUtils.getCurrentUserId();
-            cateInfo.setCreateBy(userId);
             cateInfo.setLastModifiedBy(userId);
             return cateService.updateCate(cateInfo);
         }catch (Exception e){
