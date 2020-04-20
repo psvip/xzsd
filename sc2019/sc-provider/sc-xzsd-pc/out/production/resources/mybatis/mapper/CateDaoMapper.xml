@@ -46,10 +46,6 @@
         set
             cate_name = #{cateName},
             cate_note = #{cateNote},
-            cate_code_parent = #{cateCodeParent},
-            level = #{level},
-            is_parent =  #{isParent},
-            is_deleted = #{isDeleted},
             gmt_modified = now(),
             last_modified_by  = #{lastModifiedBy},
             version = version + 1
@@ -60,9 +56,9 @@
     <resultMap id="goodsClassListMap" type="com.xzsd.pc.cate.entity.CateOne">
         <id property="cateOneCode" column="cate_code" jdbcType="VARCHAR"/>
         <id property="cateOneName" column="cate_name" jdbcType="VARCHAR"/>
-        <collection property="TwoList" ofType="com.xzsd.pc.cate.entity.CateTwo">
-            <id property="cateTwoCode" column="twoCode" jdbcType="VARCHAR"/>
-            <id property="cateTwoName" column="twoName" jdbcType="VARCHAR"/>
+        <collection property="TwoList" ofType="com.xzsd.pc.cate.entity.CateOne">
+            <id property="cateOneCode" column="twoCode" jdbcType="VARCHAR"/>
+            <id property="cateOneName" column="twoName" jdbcType="VARCHAR"/>
         </collection>
     </resultMap>
     <select id="listCate" resultMap="goodsClassListMap">
@@ -72,8 +68,10 @@
             b.cate_code as twoCode,
             b.cate_name as twoName
         from t_goods_classification a
-        LEFT JOIN t_goods_classification b on (b.cate_code_parent = a.cate_code)
-        where a.level=1 and b.level=2 and b.is_deleted = 0
+        LEFT JOIN t_goods_classification b
+		on (b.cate_code_parent = a.cate_code
+        and b.level=2 and b.is_deleted = 0)
+		where a.is_deleted = 0 and a.level =1
         order by a.gmt_create desc
     </select>
     <!--查看商品分类是否有子类-->
@@ -98,7 +96,11 @@
         select
         cate_name cateName,
         cate_code cateCode,
-        cate_note cateNote
+        cate_note cateNote,
+        cate_code_parent cateCodeParent,
+        level level,
+        is_parent isParent,
+        version
         from  t_goods_classification
         where cate_code = #{cateCode}
     </select>
@@ -115,7 +117,7 @@
     </select>
     <!--查询一级分类下二级分类-->
     <select id="findGoodsClassTwo" parameterType="java.lang.String" resultType="com.xzsd.pc.cate.entity.CateInfo">
-        select
+            select
             a.cate_name cateName,
             a.cate_code cateCode,
             a.cate_note cateNode

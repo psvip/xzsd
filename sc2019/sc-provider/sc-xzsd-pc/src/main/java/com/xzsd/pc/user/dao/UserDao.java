@@ -71,5 +71,8 @@ public interface UserDao {
      * 新增司机
      */
     int saveDriver(DriverInfo driverInfo);
-
+    /**
+     * 查询个人信息
+     */
+    UserInfo information(@Param("userCode")String userCode);
 }

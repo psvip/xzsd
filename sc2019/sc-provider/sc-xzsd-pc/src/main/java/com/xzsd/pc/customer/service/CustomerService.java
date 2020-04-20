@@ -1,5 +1,6 @@
 package com.xzsd.pc.customer.service;
 
+import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.neusoft.security.client.utils.SecurityUtils;
 import com.xzsd.pc.customer.dao.CustomerDao;
@@ -32,10 +33,12 @@ public class CustomerService {
         String userId = SecurityUtils.getCurrentUserId();
         int count = userDao.getRole(userId);
         if(count == 0){
+            PageHelper.startPage(customerInfo.getPageNum(), customerInfo.getPageSize());
             List<CustomerInfo> customerInfos = customerDao.listCustomerAll(customerInfo);
             PageInfo<CustomerInfo> pageData = new PageInfo<>(customerInfos);
             return AppResponse.success("查询成功",pageData);
         }else if(count == 1){
+            PageHelper.startPage(customerInfo.getPageNum(), customerInfo.getPageSize());
             customerInfo.setUserCode(userId);
             List<CustomerInfo> customerInfos = customerDao.listCustomer(customerInfo);
             PageInfo<CustomerInfo> pageData = new PageInfo<>(customerInfos);

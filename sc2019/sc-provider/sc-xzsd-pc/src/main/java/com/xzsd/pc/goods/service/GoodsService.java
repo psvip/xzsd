@@ -7,6 +7,7 @@ import com.xzsd.pc.goods.entity.GoodsInfo;
 import com.xzsd.pc.util.AppResponse;
 import com.xzsd.pc.util.JsonUtils;
 import com.xzsd.pc.util.RedisOperator;
+import com.xzsd.pc.util.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,8 +21,8 @@ import java.util.List;
  */
 @Service
 public class GoodsService {
-    @Autowired
-    private RedisOperator redisOperator;
+    //@Autowired
+    //private RedisOperator redisOperator;
    /* @Autowired
     private JmsMessagingTemplate jmsMessagingTemplate;
     @Autowired
@@ -43,6 +44,9 @@ public class GoodsService {
         if(0 != countGoods) {
             return AppResponse.bizError("商品已存在，请重新输入！");
         }
+        goodsInfo.setIsDeleted(0);
+        goodsInfo.setState("0");
+        goodsInfo.setGoodsCode(StringUtil.getCommonCode(4));
         // 新增商品
         int count = goodsDao.saveGoods(goodsInfo);
         if(0 == count) {
@@ -54,21 +58,11 @@ public class GoodsService {
      * 查询商品列表（分页）
      */
     public AppResponse listGoods(GoodsInfo goodsInfo){
-            if(redisOperator.get(goodsInfo.toString()) != null) {
-                System.out.println("从redis查");
-                PageInfo<GoodsInfo> pageData = JsonUtils.fromJson(redisOperator.get(goodsInfo.toString()),PageInfo.class);
-                return AppResponse.success("查询成功", pageData);
-            }
-            else {
-                System.out.println("从数据库查询");
                 PageHelper.startPage(goodsInfo.getPageNum(), goodsInfo.getPageSize());
                 List<GoodsInfo> goodsInfos = goodsDao.listGoods(goodsInfo);
                 //包装page对象
                 PageInfo<GoodsInfo> pageData = new PageInfo<>(goodsInfos);
-                redisOperator.set(goodsInfo.toString(), JsonUtils.toJson(pageData),300);
                 return AppResponse.success("查询成功", pageData);
-
-            }
     }
     /**
      * 删除商品
@@ -77,7 +71,6 @@ public class GoodsService {
     public AppResponse deleteGoods(String goodsCode, String userId){
         List<String>listGoodsCode = Arrays.asList(goodsCode.split(","));
         AppResponse appResponse = AppResponse.success("删除成功！");
-
         int count = goodsDao.deleteGoods(listGoodsCode,userId);
         if(count == 0){
             appResponse = AppResponse.bizError("删除失败,请重试");

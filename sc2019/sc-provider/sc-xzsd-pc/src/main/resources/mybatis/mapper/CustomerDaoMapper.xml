@@ -15,14 +15,14 @@
         from t_customer a
         left join t_sys_user b
         on a.customer_code = b.user_code
-        where a.is_deleted = 0
+        where b.is_deleted = 0
         <if test="userName !=null and userName !=''">
             and b.user_name like concat('%', #{userName}, '%')
         </if>
         <if test="userAcct !=null and userAcct !=''">
             and b.user_acct like concat('%', #{userAcct}, '%')
         </if>
-        order by a.gmt_create desc
+        order by b.gmt_create desc
     </select>
     <!--查询客户列表（店长）-->
     <select id="listCustomer" parameterType="com.xzsd.pc.customer.entity.CustomerInfo" resultType="com.xzsd.pc.customer.entity.CustomerInfo">
@@ -38,7 +38,7 @@
         on a.customer_code = b.user_code
         left join t_store c
         on a.invite_code = c.invite_code
-        where a.is_deleted = 0
+        where b.is_deleted = 0
         and c.manage_code= #{userCode}
         <if test="userName !=null and userName !=''">
             and b.user_name like concat('%', #{userName}, '%')
@@ -46,6 +46,6 @@
         <if test="userAcct !=null and userAcct !=''">
             and b.user_acct like concat('%', #{userAcct}, '%')
         </if>
-        order by a.gmt_create desc
+        order by b.gmt_create desc
     </select>
 </mapper>

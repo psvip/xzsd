@@ -1,5 +1,7 @@
 package com.xzsd.pc.shuffl.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import java.util.Date;
 
 /**
@@ -23,11 +25,12 @@ public class ShufflInfo {
     /**
      * 起始时间
      */
-    private Date  timeBegin;
+    private String  timeBegin;
     /**
      * 截止时间
      */
-    private  Date timeEnd;
+
+    private  String timeEnd;
     /**
      * 商品id
      */
@@ -104,20 +107,19 @@ public class ShufflInfo {
         this.photo = photo;
     }
 
-
-    public Date getTimeBegin() {
+    public String getTimeBegin() {
         return timeBegin;
     }
 
-    public void setTimeBegin(Date timeBegin) {
+    public void setTimeBegin(String timeBegin) {
         this.timeBegin = timeBegin;
     }
 
-    public Date getTimeEnd() {
+    public String getTimeEnd() {
         return timeEnd;
     }
 
-    public void setTimeEnd(Date timeEnd) {
+    public void setTimeEnd(String timeEnd) {
         this.timeEnd = timeEnd;
     }
 

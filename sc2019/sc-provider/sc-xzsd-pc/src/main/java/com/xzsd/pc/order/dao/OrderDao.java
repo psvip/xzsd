@@ -1,5 +1,6 @@
 package com.xzsd.pc.order.dao;
 
+import com.xzsd.pc.order.entity.OrderDetailsInfo;
 import com.xzsd.pc.order.entity.OrderInfo;
 import org.apache.ibatis.annotations.Param;
 
@@ -15,7 +16,11 @@ public interface OrderDao {
      */
     List<OrderInfo>listOrder(OrderInfo orderInfo);
     /**
+     * 查询订单详情
+     */
+    List<OrderDetailsInfo> findOrderById(OrderDetailsInfo orderDetailsInfo);
+    /**
      * 修改订单状态
      */
-    int updateOrderState( @Param("orderId") String orderId,@Param("orderState")String orderState,@Param("userId")String userId, @Param("listOrderId") List<String> listOrderId);
+    int updateOrderState( @Param("listOrderId") List<String> listOrderId,@Param("orderState")String orderState,@Param("userId")String userId);
 }

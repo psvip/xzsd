@@ -68,7 +68,7 @@ public class GoodsInfo  {
     /**
      * 上架时间
      */
-    private  Date shelve;
+    private  String shelve;
 
     public String getClassficationlOne() {
         return classficationlOne;
@@ -102,52 +102,13 @@ public class GoodsInfo  {
         return state;
     }
 
-    @Override
-    public String toString() {
-        return "GoodsInfo{" +
-                "pageSize=" + pageSize +
-                ", pageNum=" + pageNum +
-                ", goodsCode='" + goodsCode + '\'' +
-                ", goodsName='" + goodsName + '\'' +
-                ", isbn='" + isbn + '\'' +
-                ", classficationlOneId='" + classficationlOneId + '\'' +
-                ", classficationlTwoId='" + classficationlTwoId + '\'' +
-                ", outsideName='" + outsideName + '\'' +
-                ", inventory=" + inventory +
-                ", costPrice='" + costPrice + '\'' +
-                ", sellPrice='" + sellPrice + '\'' +
-                ", fixPrice='" + fixPrice + '\'' +
-                ", saleCnt=" + saleCnt +
-                ", state='" + state + '\'' +
-                ", shelve=" + shelve +
-                ", classficationlOne='" + classficationlOne + '\'' +
-                ", classficationlTwo='" + classficationlTwo + '\'' +
-                ", goodsPhoto='" + goodsPhoto + '\'' +
-                ", goodsIntroduce='" + goodsIntroduce + '\'' +
-                ", goodsDetail='" + goodsDetail + '\'' +
-                ", goodsAuthor='" + goodsAuthor + '\'' +
-                ", goodsPress='" + goodsPress + '\'' +
-                ", isDeleted=" + isDeleted +
-                ", sortNo=" + sortNo +
-                ", gmtCreate=" + gmtCreate +
-                ", createBy='" + createBy + '\'' +
-                ", gmtModified=" + gmtModified +
-                ", lastModifiedBy='" + lastModifiedBy + '\'' +
-                ", version='" + version + '\'' +
-                '}';
-    }
+
 
     public void setState(String state) {
         this.state = state;
     }
 
-    public Date getShelve() {
-        return shelve;
-    }
 
-    public void setShelve(Date shelve) {
-        this.shelve = shelve;
-    }
 
     /**
      * 商品图片
@@ -390,5 +351,48 @@ public class GoodsInfo  {
 
     public void setVersion(String version) {
         this.version = version;
+    }
+
+    public String getShelve() {
+        return shelve;
+    }
+
+    public void setShelve(String shelve) {
+        this.shelve = shelve;
+    }
+
+    @Override
+    public String toString() {
+        return "GoodsInfo{" +
+                "pageSize=" + pageSize +
+                ", pageNum=" + pageNum +
+                ", goodsCode='" + goodsCode + '\'' +
+                ", goodsName='" + goodsName + '\'' +
+                ", isbn='" + isbn + '\'' +
+                ", classficationlOneId='" + classficationlOneId + '\'' +
+                ", classficationlTwoId='" + classficationlTwoId + '\'' +
+                ", outsideName='" + outsideName + '\'' +
+                ", inventory=" + inventory +
+                ", costPrice='" + costPrice + '\'' +
+                ", sellPrice='" + sellPrice + '\'' +
+                ", fixPrice='" + fixPrice + '\'' +
+                ", saleCnt=" + saleCnt +
+                ", state='" + state + '\'' +
+                ", shelve='" + shelve + '\'' +
+                ", classficationlOne='" + classficationlOne + '\'' +
+                ", classficationlTwo='" + classficationlTwo + '\'' +
+                ", goodsPhoto='" + goodsPhoto + '\'' +
+                ", goodsIntroduce='" + goodsIntroduce + '\'' +
+                ", goodsDetail='" + goodsDetail + '\'' +
+                ", goodsAuthor='" + goodsAuthor + '\'' +
+                ", goodsPress='" + goodsPress + '\'' +
+                ", isDeleted=" + isDeleted +
+                ", sortNo=" + sortNo +
+                ", gmtCreate=" + gmtCreate +
+                ", createBy='" + createBy + '\'' +
+                ", gmtModified=" + gmtModified +
+                ", lastModifiedBy='" + lastModifiedBy + '\'' +
+                ", version='" + version + '\'' +
+                '}';
     }
 }

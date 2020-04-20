@@ -1,11 +1,11 @@
 package com.xzsd.pc.shuffl.controller;
 
 
+import com.neusoft.security.client.utils.SecurityUtils;
 import com.xzsd.pc.goods.entity.GoodsInfo;
 import com.xzsd.pc.shuffl.entity.ShufflInfo;
 import com.xzsd.pc.shuffl.service.ShufflService;
 import com.xzsd.pc.util.AppResponse;
-import com.xzsd.pc.util.AuthUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -36,7 +36,7 @@ public class ShufflController {
     public AppResponse saveShuffl(ShufflInfo shufflInfo) {
         try {
             //获取用户id
-            String userId = AuthUtils.getCurrentUserId();
+            String userId = SecurityUtils.getCurrentUserId();
             shufflInfo.setCreateBy(userId);
             AppResponse appResponse = shufflService.saveShuffl(shufflInfo);
             return appResponse;
@@ -65,7 +65,7 @@ public class ShufflController {
     @PostMapping("deleteShuffl")
     public AppResponse deleteShuffl(String shufflId){
         try{
-            String userId  = AuthUtils.getCurrentUserId();
+            String userId  = SecurityUtils.getCurrentUserId();
             return shufflService.deleteShufll(shufflId,userId);
         }catch (Exception e){
             logger.error("轮播图删除错误",e);
@@ -79,8 +79,7 @@ public class ShufflController {
     @PostMapping("updateShufflState")
     public AppResponse updateShufflState(String shufflId, String state){
         try {
-            String userId = AuthUtils.getCurrentUserId();
-
+            String userId = SecurityUtils.getCurrentUserId();
             return shufflService.updateShufflState(shufflId,state,userId);
         }catch (Exception e){
             logger.error("修改轮播图信息错误",e);

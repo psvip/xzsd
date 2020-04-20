@@ -1,15 +1,14 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.xzsd.pc.goods.dao.GoodsDao">
+    <!--校验商品是否已存在-->
     <select id="countGoodsCode" parameterType="com.xzsd.pc.goods.entity.GoodsInfo" resultType="int">
         select  count(goods_code)
         from t_goods
         where is_deleted = 0
         and goods_code = #{goodsCode}
-        <if test="goodsCode !=null and goodsCode != '' ">
-            and goods_code != #{goodsCode}
-        </if>
     </select>
+    <!--新增商品-->
     <insert id="saveGoods" parameterType="com.xzsd.pc.goods.entity.GoodsInfo">
         insert into t_goods
         (goods_code,
@@ -71,8 +70,8 @@
         a.goods_code goodsCode,
         a.goods_name goodsName,
         a.isbn_num isbn,
-        a.classificationl_one classficationlOneId,
-        a.classificationl_two classficationlTwoId,
+        b.cate_name classficationlOne,
+        c.cate_name classficationlTwo,
         a.fix_price fixPrice,
         a.cost_price costPrice,
         a.sell_price sellPrice,
@@ -85,7 +84,6 @@
         a.outside_name outsideName,
         a.goods_state state,
         a.shelve_time shelve,
-        photo goodsPhoto,
         a.is_deleted,
         a.sort_no,
         a.gmt_create,
@@ -94,6 +92,10 @@
         a.last_modified_by,
         a.version
         from t_goods a
+        left join t_goods_classification b
+        on a.classificationl_one = b.cate_code
+        left join t_goods_classification c
+        on c.cate_code_parent = b.cate_code
         where a.is_deleted = 0
         <if test="goodsName != null and goodsName != ''">
             and a.goods_name like concat('%', #{goodsName}, '%')
@@ -110,9 +112,7 @@
         <if test="state != null and state != ''">
             and a.goods_state =#{state}
         </if>
-        <if test="goodsCode != null and goodsCode != ''">
-            and a.goods_code =#{goodsCode}
-        </if>
+        group by a.goods_code
         order by gmt_create desc
     </select>
     <!--删除商品-->
@@ -155,7 +155,7 @@
         where goods_code = #{goodsCode}
           and version = #{version}
     </update>
-
+    <!--查看商品详情-->
     <select id="findGoodsById" parameterType="java.lang.String" resultType="com.xzsd.pc.goods.entity.GoodsInfo">
             select
                 a.goods_code goodsCode,
@@ -178,13 +178,16 @@
                 photo goodsPhoto,
                 a.sort_no,
                 a.version
-            from t_goods a left join t_goods_classification b
-            on a.classificationl_one = b.cate_code left join
-            t_goods_classification c on c.cate_code_parent = b.cate_code
+            from t_goods a
+            left join t_goods_classification b
+            on a.classificationl_one = b.cate_code
+            left join t_goods_classification c
+            on c.cate_code_parent = b.cate_code
             where a.goods_code = #{goodsCode}
             and a.is_deleted = 0
             and a.classificationl_two=c.cate_code
     </select>
+    <!--修改商品状态-->
     <update id="updateGoodsState" parameterType="com.xzsd.pc.goods.entity.GoodsInfo">
         update t_goods
         set
@@ -197,4 +200,34 @@
             #{item}
         </foreach>
     </update>
+    <!--轮播图中查询商品分页-->
+    <select id="findShufflGoods" parameterType="com.xzsd.pc.goods.entity.GoodsInfo" resultType="com.xzsd.pc.goods.entity.GoodsInfo">
+        select
+        a.goods_code goodsCode,
+        a.goods_name goodsName,
+        b.cate_name classficationlOne,
+        c.cate_name classficationlTwo,
+        a.goods_state state,
+        a.is_deleted,
+        a.sort_no,
+        a.gmt_create,
+        a.create_by,
+        a.gmt_modified,
+        a.last_modified_by,
+        a.version
+        from t_goods a
+        left join t_goods_classification b
+        on a.classificationl_one = b.cate_code
+        left join t_goods_classification c
+        on c.cate_code_parent = b.cate_code
+        where a.is_deleted = 0
+        <if test="goodsName != null and goodsName != ''">
+            and a.goods_name like concat('%', #{goodsName}, '%')
+        </if>
+        <if test="goodsCode != null and goodsCode != ''">
+            and a.goods_code like concat('%', #{goodsCode}, '%')
+        </if>
+        group by a.goods_code
+        order by gmt_create desc
+    </select>
 </mapper>

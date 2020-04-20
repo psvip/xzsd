@@ -1,4 +1,5 @@
 package com.xzsd.pc.goods.controller;
+import com.neusoft.security.client.utils.SecurityUtils;
 import com.xzsd.pc.goods.entity.GoodsInfo;
 import com.xzsd.pc.goods.service.GoodsService;
 import com.xzsd.pc.util.AppResponse;
@@ -31,10 +32,9 @@ public class GoodsController {
     public AppResponse saveGoods(GoodsInfo goodsInfo) {
         try {
             //获取用户id
-            String userId = AuthUtils.getCurrentUserId();
+            String userId = SecurityUtils.getCurrentUserId();
             goodsInfo.setCreateBy(userId);
             AppResponse appResponse = goodsService.saveGoods(goodsInfo);
-
             return appResponse;
         } catch (Exception e) {
             logger.error("商品新增失败", e);
@@ -61,7 +61,7 @@ public class GoodsController {
     @PostMapping("deleteGoods")
     public AppResponse deleteGoods(String goodsCode){
         try{
-            String userId  = AuthUtils.getCurrentUserId();
+            String userId  = SecurityUtils.getCurrentUserId();
             return goodsService.deleteGoods(goodsCode,userId);
         }catch (Exception e){
             logger.error("商品删除错误",e);
@@ -75,7 +75,7 @@ public class GoodsController {
     @PostMapping("updateGoods")
     public AppResponse updateGoods(GoodsInfo goodsInfo) {
         try {
-            String userId = AuthUtils.getCurrentUserId();
+            String userId = SecurityUtils.getCurrentUserId();
             goodsInfo.setLastModifiedBy(userId);
             return goodsService.updateGoods(goodsInfo);
         }catch (Exception e){
@@ -102,7 +102,7 @@ public class GoodsController {
     @PostMapping("updateGoodsState")
     public AppResponse updateGoodsState(String goodsCode, String state){
         try {
-            String userId = AuthUtils.getCurrentUserId();
+            String userId = SecurityUtils.getCurrentUserId();
             return goodsService.updateGoodsState(state,userId,goodsCode);
         }catch (Exception e){
             logger.error("修改商品信息错误",e);
@@ -110,5 +110,4 @@ public class GoodsController {
             throw  e;
         }
     }
-
 }

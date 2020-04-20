@@ -16,7 +16,7 @@
             from t_order
             where is_deleted = 0
             <if test="userName != null and userName !=''">
-            and user_name like concat('%', #{userName}, '%')
+            and pay_name like concat('%', #{userName}, '%')
             </if>
             <if test="phone !=null and phone !=''">
             and pay_phone = #{phone}
@@ -24,8 +24,17 @@
             <if test="orderId !=null and orderId !=''">
                 and order_id like concat('%', #{orderId}, '%')
             </if>
-            <if test="orderState !=null and orderState !=''">
+            <if test="orderState != null and orderState != ''">
                 and order_state = #{orderState}
+            </if>
+            <if test="payTimeBegin !=null and payTimeEnd != null">
+                and pay_time between #{payTimeBegin} and #{payTimeEnd}
+            </if>
+            <if test="payTimeBegin == null and payTimeEnd != null ">
+                and  #{payTimeEnd} >  pay_time
+            </if>
+            <if test="payTimeBegin != null and payTimeEnd == null ">
+                and pay_time >   #{payTimeBegin}
             </if>
             order by gmt_create desc
         </select>
@@ -38,7 +47,7 @@
         a.pay_state payState,
         a.store_code StoreId,
         a.user_code userCode,
-        a.pay_name   userName,
+        a.pay_name  userName,
         a.pay_phone phone,
         a.pay_time payTime
         from t_order a left join t_customer b
@@ -48,7 +57,7 @@
         where a.is_deleted = 0
         and c.manage_code = #{userId}
         <if test="userName != null and userName !=''">
-            and a.user_name like concat('%', #{userName}, '%')
+            and a.pay_name like concat('%', #{userName}, '%')
         </if>
         <if test="phone !=null and phone !=''">
             and a.pay_phone = #{phone}
@@ -69,9 +78,28 @@
         gmt_modified = now(),
         last_modified_by  = #{userId},
         version = version + 1
-        and order_id in
+        where order_id in
         <foreach item="item" index="index" collection="listOrderId" open="(" separator="," close=")">
             #{item}
         </foreach>
     </update>
+    <!--订单详情-->
+    <select id="findOrderById" parameterType="com.xzsd.pc.order.entity.OrderDetailsInfo" resultType="com.xzsd.pc.order.entity.OrderDetailsInfo">
+        select
+            b.order_id orderId,
+            b.goods_code goodsCode,
+            c.goods_name goodsName,
+            b.buy_num buyNum,
+            b.total_money totalMoney,
+            c.sell_price sellPrice,
+            c.cost_price costPrice
+        from
+            t_order_details b,
+            t_goods c
+        where
+            b.is_deleted = 0
+            and b.order_id = #{orderId}
+            and b.goods_code = c.goods_code
+        order by b.gmt_create desc
+    </select>
 </mapper>

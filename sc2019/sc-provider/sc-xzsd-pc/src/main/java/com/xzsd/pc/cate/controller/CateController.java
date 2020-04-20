@@ -1,10 +1,11 @@
 package com.xzsd.pc.cate.controller;
 
 
+import com.neusoft.security.client.utils.SecurityUtils;
 import com.xzsd.pc.cate.entity.CateInfo;
 import com.xzsd.pc.cate.service.CateService;
 import com.xzsd.pc.util.AppResponse;
-import com.xzsd.pc.util.AuthUtils;
+import com.xzsd.pc.util.StringUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -29,8 +30,9 @@ public class CateController {
     public AppResponse saveCate(CateInfo cateInfo) {
         try {
             //获取用户id
-            String userId = AuthUtils.getCurrentUserId();
+            String userId = SecurityUtils.getCurrentUserId();
             cateInfo.setCreateBy(userId);
+            cateInfo.setCateCode(StringUtil.getCommonCode(4));
             AppResponse appResponse = cateService.saveCate(cateInfo);
             return appResponse;
         } catch (Exception e) {
@@ -59,7 +61,7 @@ public class CateController {
     @PostMapping("deleteCate")
     public AppResponse deleteCate(String cateCode){
         try{
-            String userId  = AuthUtils.getCurrentUserId();
+            String userId  = SecurityUtils.getCurrentUserId();
             return cateService.deleteCate(cateCode,userId);
         }catch (Exception e){
             logger.error("商品分类删除错误",e);
@@ -73,7 +75,7 @@ public class CateController {
     @PostMapping("updateCate")
     public AppResponse updateCate(CateInfo cateInfo) {
         try {
-            String userId = AuthUtils.getCurrentUserId();
+            String userId = SecurityUtils.getCurrentUserId();
             cateInfo.setLastModifiedBy(userId);
             return cateService.updateCate(cateInfo);
         }catch (Exception e){

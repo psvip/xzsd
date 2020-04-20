@@ -53,12 +53,25 @@ spring:
           statement-executable-sql-log-enable: false
           connection-log-enabled: false
           result-set-log-enabled: false
+  tengxun:
+    accessKey: AKIDg6G9m8iLfjXjgQC74rPhkWMwFQheuuCE
+    secretKey: C8nBNjpWx94iQv72g8R8ZYHlz17xVnpb
+    bucket: goodsphoto-1301754484
+    bucketName: goodsphoto-1301754484
+    path: https://goodsphoto-1301754484.cos.ap-guangzhou.myqcloud.com/
+    qianzhui: lover
+    area: ap-guangzhou
+  http:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 10MB
 mybatis:
   mapper-locations: classpath:mybatis/mapper/*Mapper.xml
   config-location: classpath:mybatis/mybatis-config.xml
 sc:
   cloud:
-    dev: true
+    #dev: true
+    debug: true
     task:
       core-pool-size: 20
       max-pool-size: 50

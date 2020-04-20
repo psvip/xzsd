@@ -21,7 +21,7 @@ public enum AppResponseStatus {
     /**
      * 未查询到数据
      */
-    NOT_FOUND(5),
+    NOT_FOUND(-1),
 
     /**
      * 操作失败

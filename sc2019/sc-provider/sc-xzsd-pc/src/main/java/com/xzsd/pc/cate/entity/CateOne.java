@@ -19,7 +19,7 @@ public class CateOne {
     /**
      * 二级分类列表
      */
-    private List<CateTwo> TwoList;
+    private List<CateOne> TwoList;
     /**
      * 作废标记 0为存在，1为作废
      */
@@ -73,11 +73,12 @@ public class CateOne {
         this.cateOneNote = cateOneNote;
     }
 
-    public List<CateTwo> getTwoList() {
+
+    public List<CateOne> getTwoList() {
         return TwoList;
     }
 
-    public void setTwoList(List<CateTwo> twoList) {
+    public void setTwoList(List<CateOne> twoList) {
         TwoList = twoList;
     }
 

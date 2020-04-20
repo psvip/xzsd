@@ -40,7 +40,9 @@ public class ShufflService {
         if(countSort != 0){
             return AppResponse.bizError("序号已存在，请重新输入！");
         }
+        shufflInfo.setShufflId(StringUtil.getCommonCode(2));
          shufflInfo.setIsDeleted(0);
+         shufflInfo.setState("2");
         // 新增轮播图商品
         int count = shufflDao.saveShuffl(shufflInfo);
         if (0 == count) {
@@ -48,7 +50,6 @@ public class ShufflService {
         }
         return AppResponse.success("新增成功！");
     }
-
     /**
      * 查询轮播图列表分页
      * @param shufflInfo

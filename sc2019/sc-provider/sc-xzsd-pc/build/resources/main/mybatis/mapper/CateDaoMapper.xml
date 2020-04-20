@@ -1,14 +1,12 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.xzsd.pc.cate.dao.CateDao">
+    <!--检验商品分类id是否存在-->
     <select id="countCateCode" parameterType="com.xzsd.pc.cate.entity.CateInfo" resultType="int">
         select  count(cate_code)
         from t_goods_classification
         where is_deleted = 0
         and cate_code = #{cateCode}
-        <if test="cateCode !=null and cateCode != '' ">
-            and cate_code != #{cateCode}
-        </if>
     </select>
     <!--新增商品分类-->
     <insert id="saveCate" parameterType="com.xzsd.pc.cate.entity.CateInfo">
@@ -58,23 +56,27 @@
             where cate_code = #{cateCode}
             and version = #{version}
     </update>
-    <select id="listCate" parameterType="com.xzsd.pc.cate.entity.CateInfo" resultType="com.xzsd.pc.cate.entity.CateInfo">
+    <!--查询商品分类列表-->
+    <resultMap id="goodsClassListMap" type="com.xzsd.pc.cate.entity.CateOne">
+        <id property="cateOneCode" column="cate_code" jdbcType="VARCHAR"/>
+        <id property="cateOneName" column="cate_name" jdbcType="VARCHAR"/>
+        <collection property="TwoList" ofType="com.xzsd.pc.cate.entity.CateTwo">
+            <id property="cateTwoCode" column="twoCode" jdbcType="VARCHAR"/>
+            <id property="cateTwoName" column="twoName" jdbcType="VARCHAR"/>
+        </collection>
+    </resultMap>
+    <select id="listCate" resultMap="goodsClassListMap">
         select
-            a.cate_name cateName,
-            a.cate_code cateCode,
-            a.cate_note cateNode
-            from  t_goods_classification a
-            where a.level = 1
-            order by gmt_create desc
+            a.cate_code,
+            a.cate_name,
+            b.cate_code as twoCode,
+            b.cate_name as twoName
+        from t_goods_classification a
+        LEFT JOIN t_goods_classification b on (b.cate_code_parent = a.cate_code)
+        where a.level=1 and b.level=2 and b.is_deleted = 0
+        order by a.gmt_create desc
     </select>
-    <select id="listCateTwo" parameterType="java.lang.String" resultType="com.xzsd.pc.cate.entity.CateInfo">
-        select
-            cate_name cateName,
-            cate_code cateCode
-            from  t_goods_classification
-            where  cate_code_parent = #{nextCode}
-
-    </select>
+    <!--查看商品分类是否有子类-->
     <select id="countZiclass" parameterType="java.lang.String" resultType="int">
         select  count(cate_code_parent)
         from t_goods_classification
@@ -108,6 +110,7 @@
             a.cate_note cateNode
             from  t_goods_classification a
             where a.level = 1
+            group by a.cate_code
             order by gmt_create desc
     </select>
     <!--查询一级分类下二级分类-->
@@ -118,6 +121,7 @@
             a.cate_note cateNode
             from  t_goods_classification a
             where a.cate_code_parent = #{classificationlOneId}
+            group by a.cate_code
             order by gmt_create desc
     </select>
 </mapper>

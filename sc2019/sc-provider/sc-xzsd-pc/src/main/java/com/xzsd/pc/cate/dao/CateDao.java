@@ -27,7 +27,6 @@ public interface CateDao {
      * 查询商品分类列表
      */
     List<CateOne>listCate();
-
     /**
      * 删除商品分类
      */

@@ -27,12 +27,9 @@ import javax.validation.constraints.NotNull;
 @RequestMapping("/user")
 @Validated
 public class UserController {
-
     private static final Logger logger = LoggerFactory.getLogger(UserController.class);
-
     @Resource
     private UserService userService;
-
     /**
      * 部门：南京软件研发中心
      * 功能：新增用户
@@ -54,7 +51,6 @@ public class UserController {
             throw new ScServerException(e);
         }
     }
-
     /**
      * 部门：南京软件研发中心
      * 功能：获取用户列表
@@ -155,5 +151,13 @@ public class UserController {
         }
 
         return AppResponse.success("查询成功", userInfo);
+    }
+    /**
+     * 查询个人信息
+     */
+    @RequestMapping("information")
+    public AppResponse information(){
+        String userCode = SecurityUtils.getCurrentUserId();
+        return userService.information(userCode);
     }
 }

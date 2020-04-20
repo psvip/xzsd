@@ -5,6 +5,7 @@ import com.github.pagehelper.PageInfo;
 import com.xzsd.pc.hot.dao.HotDao;
 import com.xzsd.pc.hot.entity.HotInfo;
 import com.xzsd.pc.util.AppResponse;
+import com.xzsd.pc.util.StringUtil;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -34,6 +35,8 @@ public class HotService {
         }
         // 新增热门位商品
         int count = hotDao.saveHot(hotInfo);
+        hotInfo.setIsDeleted(0);
+        hotInfo.setHotId(StringUtil.getCommonCode(3));
         if (0 == count) {
             return AppResponse.bizError("新增失败，请重试！");
         }

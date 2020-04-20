@@ -7,6 +7,8 @@ import com.xzsd.pc.driver.dao.DriverDao;
 import com.xzsd.pc.driver.entity.DriverInfo;
 import com.xzsd.pc.user.dao.UserDao;
 import com.xzsd.pc.util.AppResponse;
+import com.xzsd.pc.util.PasswordUtils;
+import com.xzsd.pc.util.StringUtil;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -33,7 +35,10 @@ public class DriverService {
         if(0 != countAcct){
             return AppResponse.bizError("账号已存在，请重新输入！");
         }
+        String pwd = PasswordUtils.generatePassword(driverInfo.getPassword());
         driverInfo.setIsDeleted(0);
+        driverInfo.setPassword(pwd);
+        driverInfo.setUserCode(StringUtil.getCommonCode(4));
         int count = driverDao.saveDriver(driverInfo);
         int countUser = userDao.saveDriver(driverInfo);
         if(count == 0 || countUser == 0){

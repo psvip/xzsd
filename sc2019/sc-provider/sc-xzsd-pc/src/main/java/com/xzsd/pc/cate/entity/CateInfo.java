@@ -49,6 +49,18 @@ public class CateInfo {
      * 创建者
      */
     private String createBy;
+    /**
+     * 更新时间
+     */
+    private Date gmtModified;
+    /**
+     * 更新者
+     */
+    private String lastModifiedBy;
+    /**
+     * 版本号
+     */
+    private String version;
     public String getCateName() {
         return cateName;
     }
@@ -153,17 +165,6 @@ public class CateInfo {
         this.version = version;
     }
 
-    /**
-     * 更新时间
-     */
-    private Date gmtModified;
-    /**
-     * 更新者
-     */
-    private String lastModifiedBy;
-    /**
-     * 版本号
-     */
-    private String version;
+
 
 }

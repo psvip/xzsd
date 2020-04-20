@@ -8,6 +8,7 @@ import com.xzsd.pc.store.entity.AddressInfo;
 import com.xzsd.pc.store.entity.StoreInfo;
 import com.xzsd.pc.user.dao.UserDao;
 import com.xzsd.pc.util.AppResponse;
+import com.xzsd.pc.util.StringUtil;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -35,6 +36,7 @@ public class StoreService {
             return AppResponse.bizError("门店已存在，请重新输入！");
         }
         storeInfo.setIsDeleted(0);
+        storeInfo.setStoreCode(StringUtil.getCommonCode(4));
         int count = storeDao.saveStore(storeInfo);
         if(count == 0){
             return AppResponse.bizError("新增失败，请重试！");

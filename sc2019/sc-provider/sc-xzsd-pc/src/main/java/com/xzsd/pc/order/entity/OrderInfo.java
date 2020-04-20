@@ -33,11 +33,11 @@ public class OrderInfo {
     /**
      * 付款时间起
      */
-    private Date payTimeBegin;
+    private String payTimeBegin;
     /**
      * 付款时间止
      */
-    private Date payTimeEnd;
+    private String payTimeEnd;
     /**
      * 门店编号
      */
@@ -45,7 +45,7 @@ public class OrderInfo {
     /**
      * 付款时间
      */
-    private Date payTime;
+    private String payTime;
     /**
      * 客户id
      */
@@ -75,6 +75,31 @@ public class OrderInfo {
      * 店长id
      */
     private String userId;
+    /**
+     * 订单明细类
+     */
+    private List<OrderDetailsInfo> orderDetailsInfos;
+    /**
+     * 商品
+     * @return
+     */
+   private List<GoodsInfo> goodsInfos;
+
+    public List<OrderDetailsInfo> getOrderDetailsInfos() {
+        return orderDetailsInfos;
+    }
+
+    public void setOrderDetailsInfos(List<OrderDetailsInfo> orderDetailsInfos) {
+        this.orderDetailsInfos = orderDetailsInfos;
+    }
+
+    public List<GoodsInfo> getGoodsInfos() {
+        return goodsInfos;
+    }
+
+    public void setGoodsInfos(List<GoodsInfo> goodsInfos) {
+        this.goodsInfos = goodsInfos;
+    }
 
     public String getUserId() {
         return userId;
@@ -132,19 +157,19 @@ public class OrderInfo {
         this.payState = payState;
     }
 
-    public Date getPayTimeBegin() {
+    public String getPayTimeBegin() {
         return payTimeBegin;
     }
 
-    public void setPayTimeBegin(Date payTimeBegin) {
+    public void setPayTimeBegin(String payTimeBegin) {
         this.payTimeBegin = payTimeBegin;
     }
 
-    public Date getPayTimeEnd() {
+    public String getPayTimeEnd() {
         return payTimeEnd;
     }
 
-    public void setPayTimeEnd(Date payTimeEnd) {
+    public void setPayTimeEnd(String payTimeEnd) {
         this.payTimeEnd = payTimeEnd;
     }
 
@@ -156,11 +181,11 @@ public class OrderInfo {
         StoreId = storeId;
     }
 
-    public Date getPayTime() {
+    public String getPayTime() {
         return payTime;
     }
 
-    public void setPayTime(Date payTime) {
+    public void setPayTime(String payTime) {
         this.payTime = payTime;
     }
 

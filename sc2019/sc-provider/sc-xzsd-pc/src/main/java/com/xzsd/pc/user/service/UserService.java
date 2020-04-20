@@ -39,14 +39,13 @@ public class UserService {
 
     @Transactional(rollbackFor = Exception.class)
     public AppResponse saveUser(UserInfo userInfo) {
-
         // 校验账号是否存在
         int countUserAcct = userDao.countUserAcct(userInfo);
         if(0 != countUserAcct) {
             return AppResponse.bizError("用户账号已存在，请重新输入！");
         }
         // 密码加密 默认为123456
-        String pwd = PasswordUtils.generatePassword("123456");
+        String pwd = PasswordUtils.generatePassword(userInfo.getUserPwd());
         userInfo.setUserCode(StringUtil.getCommonCode(2));
         userInfo.setUserPwd(pwd);
         userInfo.setIsDeleted(0);
@@ -143,7 +142,6 @@ public class UserService {
             String oldPwd = PasswordUtils.generatePassword(userInfo.getUserPwd());
             // 获取用户信息
             UserInfo userDetail = userDao.getUserById(userInfo.getUserCode());
-
             if(null == userDetail) {
                 return AppResponse.bizError("用户不存在或已被删除！");
             } else {
@@ -159,5 +157,12 @@ public class UserService {
             appResponse = AppResponse.bizError("修改密码失败，请重试！");
         }
         return appResponse;
+    }
+    /**
+     * 查询个人信息
+     */
+    public AppResponse information(String userCode){
+        UserInfo userInfo = userDao.information(userCode);
+        return AppResponse.success("查询成功！", userInfo);
     }
 }

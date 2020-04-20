@@ -1,6 +1,7 @@
 package com.xzsd.pc.hot.controller;
 
 
+import com.neusoft.security.client.utils.SecurityUtils;
 import com.xzsd.pc.hot.entity.HotInfo;
 import com.xzsd.pc.hot.service.HotService;
 import com.xzsd.pc.util.AppResponse;
@@ -30,7 +31,7 @@ public class HotController {
     public AppResponse saveHot(HotInfo hotInfo) {
         try {
             //获取用户id
-            String userId = AuthUtils.getCurrentUserId();
+            String userId = SecurityUtils.getCurrentUserId();
             hotInfo.setCreateBy(userId);
             AppResponse appResponse = hotService.saveHot(hotInfo);
             return appResponse;
@@ -58,7 +59,7 @@ public class HotController {
     @PostMapping("updateHotGoodsById")
     public AppResponse updateHotGoodsById(HotInfo hotInfo){
         try {
-            String userId = AuthUtils.getCurrentUserId();
+            String userId = SecurityUtils.getCurrentUserId();
             hotInfo.setLastModifiedBy(userId);
             return hotService.updateHotGoodsById(hotInfo);
         }catch (Exception e){
@@ -89,7 +90,7 @@ public class HotController {
     @RequestMapping("deleteHotGoods")
     public AppResponse deleteHotGoods(String hotId){
         try{
-            String userId  = AuthUtils.getCurrentUserId();
+            String userId  = SecurityUtils.getCurrentUserId();
             return hotService.deleteHotGoods(hotId,userId);
         }catch (Exception e){
             logger.error("热门位商品删除错误",e);
@@ -103,7 +104,7 @@ public class HotController {
     @PostMapping("updateHotGoodsShow")
     public AppResponse updateHotGoodsShow(String hotGoodsCnt){
         try {
-            String userId = AuthUtils.getCurrentUserId();
+            String userId = SecurityUtils.getCurrentUserId();
             return hotService.updateHotGoodsShow(hotGoodsCnt,userId);
         }catch (Exception e){
             logger.error("修改热门位商品数量信息错误",e);

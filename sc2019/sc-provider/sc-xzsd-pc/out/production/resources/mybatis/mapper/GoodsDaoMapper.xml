@@ -53,7 +53,7 @@
             #{goodsDetail},
             #{inventory},
             #{outsideName},
-            #{state},
+            0,
             #{shelve},
             #{goodsPhoto},
             #{isDeleted},
@@ -97,6 +97,7 @@
         left join t_goods_classification c
         on c.cate_code_parent = b.cate_code
         where a.is_deleted = 0
+        and a.classificationl_two=c.cate_code
         <if test="goodsName != null and goodsName != ''">
             and a.goods_name like concat('%', #{goodsName}, '%')
         </if>
@@ -146,7 +147,6 @@
             detail = #{goodsDetail},
             inventory =	#{inventory},
             outside_name = #{outsideName},
-            goods_state =#{state},
             shelve_time = #{shelve},
             photo =	#{goodsPhoto},
             gmt_modified = now(),
@@ -161,6 +161,8 @@
                 a.goods_code goodsCode,
                 a.goods_name goodsName,
                 a.isbn_num isbn,
+                a.classificationl_one classficationlOneId,
+                a.classificationl_two classficationlTwoId,
                 b.cate_name classficationlOne,
                 c.cate_name classficationlTwo,
                 fix_price fixPrice,
@@ -191,6 +193,9 @@
     <update id="updateGoodsState" parameterType="com.xzsd.pc.goods.entity.GoodsInfo">
         update t_goods
         set
+            <if test="state == 1">
+                shelve_time = now(),
+            </if>
             goods_state = #{state},
             gmt_modified = now(),
             last_modified_by  = #{userId},

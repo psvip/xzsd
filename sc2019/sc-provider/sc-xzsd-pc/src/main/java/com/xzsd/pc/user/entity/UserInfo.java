@@ -1,5 +1,6 @@
 package com.xzsd.pc.user.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import java.util.Date;
@@ -86,6 +87,7 @@ public class UserInfo {
     /**
      * 创建时间
      */
+    @JsonFormat(shape = JsonFormat.Shape.STRING,pattern = "yyyy-MM-dd HH:mm::ss",timezone = "GMT+8")
     private Date gmtCreate;
     /**
      * 创建者
@@ -94,6 +96,7 @@ public class UserInfo {
     /**
      * 更新时间
      */
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm::ss",timezone = "GMT+8")
     private Date gmtModified;
     /**
      * 更新者
