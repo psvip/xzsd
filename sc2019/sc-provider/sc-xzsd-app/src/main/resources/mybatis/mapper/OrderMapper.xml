@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.xzsd.app.order.dao.OrderDao">
+    <!--查询订单列表-->
+    <resultMap id="listOrdersMap" type="com.xzsd.app.order.entity.OrderInfo">
+        <id property="orderId" column="order_id"></id>
+        <result property="buyNum" column="buy_num"></result>
+        <result property="orderPrice" column="order_price"></result>
+        <result property="orderState" column="order_state"></result>
+        <result property="payState" column="pay_state"></result>
+        <result property="version" column="version"></result>
+        <collection property="orderDetailsInfoList" ofType="com.xzsd.app.order.entity.OrderDetailsInfo" select="listOrderDetails" column="order_id">
+            <id property="orderDetailsId" column="order_detail_id"></id>
+            <result property="goodsCode" column="goods_code"></result>
+            <result property="buyNum" column="buy_num"></result>
+            <result property="totalMoney" column="total_money"></result>
+            <result property="goodsPhoto" column="goods_photo"></result>
+            <result property="goodsName" column="goods_name"></result>
+            <result property="goodsProduce" column="introduce"></result>
+            <result property="sellPrice" column="sell_price"></result>
+        </collection>
+    </resultMap>
+    <select id="listOrder" parameterType="com.xzsd.app.order.entity.OrderInfo" resultMap="listOrdersMap">
+        select
+        orders_id orderId,
+        buy_num,
+        order_price,
+        order_state,
+        pay_state,
+        version
+        from
+        t_order
+        where
+        is_deleted = 0
+        <if test="ordersState != null and ordersState !=''">
+            and orders_state = #{ordersState}
+        </if>
+        order by gmt_create desc
+    </select>
+    <select id="listOrderDetails" parameterType="java.lang.String" resultType="com.xzsd.app.order.entity.OrderDetailsInfo">
+        select
+            a.goods_code,
+            buy_num,
+            total_money,
+            goods_photo,
+            goods_name,
+            introduce,
+            sell_price
+        from
+            t_order_details a,t_goods b
+        where
+            a.is_deleted = 0
+            and a.goods_code = b.goods_code
+            and a.order_id = #{orderId}
+        order by a.gmt_create desc
+    </select>
+    <!--新增订单-->
+    <insert id="addOrder" parameterType="com.xzsd.app.order.entity.OrderInfo">
+        insert into t_order
+            (order_id,
+            store_code,
+            user_code,
+            buy_num,
+           order_price,
+            order_state,
+           pay_state,
+            is_deleted,
+            create_by,
+            gmt_create,
+            last_modified_by,
+            gmt_modified,
+            version)
+        values
+            (#{orderId},
+            #{StoreId},
+            #{userCode},
+            #{buyNum},
+            #{orderPrice},
+            2,
+            1,
+            now(),
+            0,
+            #{createBy},
+            now(),
+            #{lastModifiedBy},
+            now(),
+            0)
+    </insert>
+    <!--订单详情-->
+    <resultMap id="findOrderByIdMap" type="com.xzsd.app.order.entity.OrderInfo">
+        <id property="orderId" column="order_id"></id>
+        <result property="storeName" column="store_name"></result>
+        <result property="storeAddress" column="address"></result>
+        <result property="gmtCreate" column="gmt_create"></result>
+        <result property="orderState" column="order_state"></result>
+        <result property="buyNum" column="buy_num"></result>
+        <result property="orderPrice" column="order_price"></result>
+        <result property="userName" column="pay_name"></result>
+        <result property="phone" column="pay_phone"></result>
+        <collection property="orderDetailsInfo" ofType="com.xzsd.app.order.entity.OrderDetailsInfo">
+            <id property="orderDetailsId" column="order_detail_id"></id>
+            <result property="goodsCode" column="goods_code"></result>
+            <result property="goodsPhoto" column="photo"></result>
+            <result property="goodsName" column="goods_name"></result>
+            <result property="goodsProduce" column="introduce"></result>
+            <result property="sellPrice" column="sell_price"></result>
+            <result property="totalMoney" column="total_money"></result>
+            <result property="buyNum" column="buy_num"></result>
+        </collection>
+    </resultMap>
+    <select id="findOrderById" parameterType="java.lang.String" resultMap="findOrderByIdMap">
+        select
+            i.phone,
+            i.user_name,
+            a.order_id,
+            d.store_name,
+            concat(e.add_name,f.add_name,g.add_name,d.address) store_address,
+            a.gmt_create,
+            a.order_state,
+            a.buy_num,
+            a.order_price,
+            b.goods_code,
+            b.buy_num,
+            b.total_money,
+            c.photo,
+            c.goods_name,
+            c.introduce,
+            c.sell_price
+        from
+            t_order a,
+            t_order_details b,
+            t_goods c,
+            t_store d,
+            t_address e,
+            t_address f,
+            t_address g,
+            t_customer h,
+            t_sys_user i
+        where
+            a.is_deleted = 0
+            and a.order_id = #{orderId}
+            and a.store_code = d.store_code
+            and d.province_code = e.add_code
+            and d.city_code = f.add_code
+            and d.area_code = g.add_code
+            and b.goods_code = c.goods_code
+            and a.user_code = h.customer_code
+            and h.customer_code = i.user_code
+        order by a.gmt_create desc
+    </select>
+    <!--修改订单状态-->
+    <update id="updateOrderState" parameterType="java.lang.String" >
+        update t_order
+        set
+        order_state = #{orderState},
+        gmt_modified = now(),
+        last_modified_by = #{userId},
+        version = version +1
+        where order_id = #{orderId}
+    </update>
+
+</mapper>

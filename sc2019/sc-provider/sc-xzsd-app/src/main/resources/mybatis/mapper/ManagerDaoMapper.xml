@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.xzsd.app.manager.dao.ManagerDao">
+    <!--查询个人信息-->
+    <select id="managerInformation" parameterType="java.lang.String" resultType="com.xzsd.app.manager.entity.ManagerInfo">
+        select
+        a.photo photo,
+        b.store_code storeCode,
+        a.user_name userName,
+        a.version,
+        b.store_name storeName,
+        b.invite_code inviteCode,
+        concat(c.add_name,d.add_name,e.add_name,b.address) address
+        from  t_sys_user a
+        left join t_store b
+        left join t_address c
+        on c.add_code = b.province_code
+        left join  t_address d
+        on d.add_code = b.city_code
+        left join  t_address e
+        on e.add_code = area_code
+        on b.manage_code = a.user_code
+        where a.user_code = #{userCode}
+        and b.is_deleted = 0
+    </select>
+</mapper>

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.xzsd.app.shuffl.dao.ShufflDao">
+
+    <!-- 查询轮播图列表-->
+    <select id="listShuffl"  resultType="com.xzsd.app.shuffl.entity.ShufflInfo">
+        select
+            photo photo,
+            goods_code goodsCode
+            from t_shuffling_figure
+            where is_deleted = 0
+            and shuffl_state = 1
+            and  UNIX_TIMESTAMP (NOW()) > UNIX_TIMESTAMP(time_begin)
+            and UNIX_TIMESTAMP(time_end) > UNIX_TIMESTAMP(NOW())
+            order by shuffl_sort ASC
+    </select>
+</mapper>

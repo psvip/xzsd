@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.xzsd.app.order.dao.OrderDetailsDao">
+    <!--新增订单明细-->
+    <insert id="addOrderDetails" parameterType="com.xzsd.app.order.entity.OrderDetailsInfo">
+        insert into t_order_details
+            (order_detail_id,
+            order_id,
+            goods_code,
+            buy_num,
+            total_money,
+            is_deleted,
+            create_by,
+            gmt_create,
+            last_modified_by,
+            gmt_modified,
+            version)
+        values
+            (#{orderDetailsId},
+            #{ordersId},
+            #{goodsCode},
+            #{buyNum},
+            #{totalMoney},
+            0,
+            #{createBy},
+            now(),
+            #{lastModifiedBy},
+            now(),
+            0)
+    </insert>
+</mapper>

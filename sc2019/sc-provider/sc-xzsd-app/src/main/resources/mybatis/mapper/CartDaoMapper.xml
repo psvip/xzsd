@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.xzsd.app.cart.dao.CartDao">
+    <!--查询商品库存-->
+    <select id="countGoodsCnt" parameterType="com.xzsd.app.cart.entity.CartInfo" resultType="int" >
+        select inventory inventory
+        from t_shopping_cart a
+        left join t_goods  b
+        on a.goods_code = b.goods_code
+        where a.goods_code = #{goodsCode}
+    </select>
+    <!--新增购物车-->
+    <insert id="saveCart" parameterType="com.xzsd.app.cart.entity.CartInfo">
+        insert into
+        t_shopping_cart
+        (
+        cart_id,
+        goods_code,
+        goods_cnt,
+        is_deleted,
+        sort_no,
+        gmt_create,
+        create_by,
+        gmt_modified,
+        last_modified_by,
+        version
+        )
+        values
+        (
+        #{cartId},
+        #{goodsCode},
+        1,
+        0,
+        0,
+        now(),
+        #{createBy},
+        now(),
+        #{lastModifiedBy},
+        0
+        )
+    </insert>
+    <!--查询购物车列表-->
+    <select id="listShopcart" parameterType="com.xzsd.app.cart.entity.CartInfo" resultType="com.xzsd.app.cart.entity.CartInfo">
+        select
+        a.goods_code goodsCode,
+        b.goods_Name goodsName,
+        b.photo goodsPhoto,
+        b.sell_price sellPrice,
+        a.goods_cnt goodsCnt,
+        a.cart_id cartId
+        from t_shopping_cart a
+        left join t_goods b
+        on a.goods_code = b.goods_code
+        where
+        a.create_by = #{userCode}
+         order by a.gmt_create desc
+    </select>
+    <!--修改购物车数量-->
+    <update id="saveGoods" parameterType="java.lang.String" >
+        update t_shopping_cart
+        set
+        goods_cnt = #{goodsCnt},
+        gmt_modified = now(),
+        last_modified_by  = #{userId},
+        version = version + 1
+        where cart_id = #{cartId}
+    </update>
+    <!--删除购物车-->
+    <update id="deleteCart" parameterType="com.xzsd.app.cart.entity.CartInfo">
+        update t_shopping_cart
+        set
+        is_deleted = 1,
+        gmt_modified = now(),
+        last_modified_by  = #{userId},
+        version = version + 1
+        where cart_id in
+        <foreach item="item" index="index" collection="listCartId" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </update>
+</mapper>

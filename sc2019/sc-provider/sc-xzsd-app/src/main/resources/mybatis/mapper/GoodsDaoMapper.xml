@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.xzsd.app.goods.dao.GoodsDao">
+
+    <!--查看商品详情-->
+    <select id="findAppGoodsById" parameterType="java.lang.String" resultType="com.xzsd.app.goods.entity.GoodsInfo">
+            select
+                a.goods_code goodsCode,
+                a.goods_name goodsName,
+                a.isbn_num isbn,
+                a.evaluation_level evaluationlevel,
+                fix_price fixPrice,
+                sell_price sellPrice,
+                sale_cnt saleCnt,
+                press goodsPress,
+                author goodsAuthor,
+                detail goodsDetail,
+                outside_name outsideName,
+                photo goodsPhoto,
+                b.store_name storeName
+            from t_goods a,t_store b
+            left join t_customer c
+            on c.invite_code = b.invite_code
+            where a.goods_code = #{goodsCode}
+            and c.customer_code = #{userId}
+    </select>
+    <!--查询商品一级分类-->
+    <select id="findGoodsClassOne"  resultType="com.xzsd.app.cate.entity.CateInfo">
+        select
+            a.cate_name cateName,
+            a.cate_code cateCode,
+            a.cate_note cateNode
+            from  t_goods_classification a
+            where a.level = 1
+            group by a.cate_code
+            order by gmt_create desc
+    </select>
+    <!--查询一级分类下二级分类-->
+    <select id="findGoodsClassTwo" parameterType="java.lang.String" resultType="com.xzsd.app.goods.entity.CateInfo">
+      select
+            a.cate_name cateName,
+            a.cate_code cateCode,
+            a.cate_note cateNode,
+			b.goods_name,
+			b.photo,
+			b.sale_cnt,
+			b.sell_price
+            from  t_goods_classification a
+			left join t_goods b
+            on b.classificationl_two = a.cate_code
+			where a.cate_code_parent = #{classificationlOneId}
+			and b.is_deleted = 0
+			group by b.goods_code
+            order by b.gmt_create desc
+    </select>
+</mapper>
