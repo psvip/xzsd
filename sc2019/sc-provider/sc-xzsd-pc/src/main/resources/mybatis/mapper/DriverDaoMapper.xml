@@ -102,7 +102,7 @@
         left join t_store c
         on a.area_code =c.area_code
         where b.is_deleted = 0
-        and c.manage_code = #{userId}
+        and c.manage_code = #{mangerCode}
         <if test="userName !=null and userName !=''">
             and b.user_name like concat('%', #{userName}, '%')
         </if>
