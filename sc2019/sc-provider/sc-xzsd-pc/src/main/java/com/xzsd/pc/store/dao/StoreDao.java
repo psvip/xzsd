@@ -37,7 +37,7 @@ public interface StoreDao {
     /**
      * 查询门店列表（店长）
      */
-    List<StoreInfo> listStoreByManager(StoreInfo storeInfo,@Param("userId") String userId);
+    List<StoreInfo> listStoreByManager(StoreInfo storeInfo);
     /**
      * 删除门店
      */

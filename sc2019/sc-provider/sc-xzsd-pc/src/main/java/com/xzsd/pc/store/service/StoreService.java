@@ -83,9 +83,10 @@ public class StoreService {
             return AppResponse.success("查询成功", pageData);
         }
         else if(1 == count){
+          //  storeInfo.setManagerCode(userId);
             storeInfo.setManagerCode(userId);
             PageHelper.startPage(storeInfo.getPageNum(), storeInfo.getPageSize());
-            List<StoreInfo> storeInfos = storeDao.listStoreByManager(storeInfo,userId);
+            List<StoreInfo> storeInfos = storeDao.listStoreByManager(storeInfo);
             //包装page对象
             PageInfo<StoreInfo> pageData = new PageInfo<>(storeInfos);
             return AppResponse.success("查询成功", pageData);
