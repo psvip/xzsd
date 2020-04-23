@@ -5,6 +5,15 @@ public class DriverInfo {
     private String phone;
     private String photo;
     private String version;
+    private String driverCode;
+
+    public String getDriverCode() {
+        return driverCode;
+    }
+
+    public void setDriverCode(String driverCode) {
+        this.driverCode = driverCode;
+    }
 
     public String getUserName() {
         return userName;
