@@ -10,6 +10,7 @@
         b.store_code storeCode,
         a.user_name userName,
         a.version,
+        a.role role,
         b.store_name storeName,
         b.invite_code inviteCode,
         concat(c.add_name,d.add_name,e.add_name,b.address) address
@@ -24,5 +25,20 @@
         on b.manage_code = a.user_code
         where a.user_code = #{userCode}
         and b.is_deleted = 0
+    </select>
+    <!--查询司机列表-->
+    <select id="findDriverById" parameterType="java.lang.String" resultType="com.xzsd.app.driver.entity.DriverInfo">
+        select
+        c.user_name userName,
+        c.phone phone,
+		c.user_code driverCode
+        from t_store a
+        left join t_driver b
+        on a.area_code = b.area_code
+        left join t_sys_user c
+        on b.driver_code = c.user_code
+        where a.manage_code = #{userCode}
+				GROUP BY c.user_code
+				ORDER BY c.gmt_create
     </select>
 </mapper>
