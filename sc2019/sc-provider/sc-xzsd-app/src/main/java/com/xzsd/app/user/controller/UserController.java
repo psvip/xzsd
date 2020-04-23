@@ -102,6 +102,7 @@ public class UserController {
             //获取用户id
             String userId = SecurityUtils.getCurrentUserId();
             userInfo.setLastModifiedBy(userId);
+            userInfo.setUserCode(userId);
             return userService.updatePwd(userInfo);
         } catch (Exception e) {
             logger.error("修改异常", e);

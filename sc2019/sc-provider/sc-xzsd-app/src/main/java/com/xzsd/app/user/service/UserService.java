@@ -7,6 +7,8 @@ import com.xzsd.app.user.dao.UserDao;
 import com.xzsd.app.user.entity.UserInfo;
 import com.xzsd.app.user.entity.UserSettingDTO;
 import com.xzsd.app.utils.PasswordUtils;
+import org.springframework.security.crypto.bcrypt.BCrypt;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.interceptor.TransactionAspectSupport;
@@ -132,18 +134,10 @@ public class UserService {
     public AppResponse updatePwd(UserInfo userInfo) {
         AppResponse appResponse = AppResponse.success("修改密码成功！");
         // 需要校验原密码是否正确
-        if(null != userInfo.getUserPwd() && !"".equals(userInfo.getUserPwd())) {
-            String oldPwd = PasswordUtils.generatePassword(userInfo.getUserPwd());
-            // 获取用户信息
-            UserInfo userDetail = userDao.getUserById(userInfo.getUserCode());
-
-            if(null == userDetail) {
-                return AppResponse.bizError("用户不存在或已被删除！");
-            } else {
-                if(!oldPwd.equals(userDetail.getUserPwd())) {
-                    return AppResponse.bizError("原密码不匹配，请重新输入！");
-                }
-            }
+        String oldPwd = PasswordUtils.generatePassword(userInfo.getUserPwd());
+        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+        if(encoder.matches(userInfo.getUserPwd(),oldPwd) == false){
+            return AppResponse.bizError("原密码不正确，请重试！");
         }
         // 修改密码
         userInfo.setNewPwd(PasswordUtils.generatePassword(userInfo.getNewPwd()));

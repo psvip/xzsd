@@ -6,6 +6,10 @@ import java.util.Date;
 
 public class UserInfo {
     /**
+     * 旧密码
+     */
+    private String oldPwd;
+    /**
      * 用户代码
      */
     private String userCode;
@@ -113,6 +117,15 @@ public class UserInfo {
     private String version;
 
     private String photo;
+
+    public String getOldPwd() {
+        return oldPwd;
+    }
+
+    public void setOldPwd(String oldPwd) {
+        this.oldPwd = oldPwd;
+    }
+
     public String getRole() {
         return role;
     }
