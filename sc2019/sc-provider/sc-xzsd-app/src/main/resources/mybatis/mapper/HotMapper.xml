@@ -21,7 +21,6 @@
             on a.goods_code = b.goods_code
             where a.is_deleted = 0
             and b.is_deleted = 0
-        group by a.hot_id
         order by a.hot_sort asc
         limit #{hotGoodsCnt}
     </select>
